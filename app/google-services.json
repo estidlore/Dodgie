@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "262369407225",
+    "firebase_url": "https://dodgie-blieve.firebaseio.com",
+    "project_id": "dodgie-blieve",
+    "storage_bucket": "dodgie-blieve.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:262369407225:android:66f68dc2baf0f42792b228",
+        "android_client_info": {
+          "package_name": "com.blieve.dodgie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "262369407225-ggtsandt07lljdlti8h1pt1leth56g79.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApGHQFtYA084i_tMQ2CjX9vTnXuohDHEc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "262369407225-ggtsandt07lljdlti8h1pt1leth56g79.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

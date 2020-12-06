@@ -1,0 +1,133 @@
+<resources>
+
+    <style name="dark" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorPrimaryDark">#000</item>
+        <item name="colorAccent">#FFFFFF</item>
+    </style>
+
+    <style name="ImmersiveTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="ImmersiveTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+        <item name="android:windowAnimationStyle">@style/FadeTransition</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="FadeTransition">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <!-- CUSTOM -->
+
+    <style name="constraint">
+        <item name="layout_constraintTop_toTopOf">parent</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
+        <item name="layout_constraintLeft_toLeftOf">parent</item>
+        <item name="layout_constraintRight_toRightOf">parent</item>
+    </style>
+
+    <style name="rel" parent="constraint">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+    </style>
+
+    <style name="seek" parent="rel">
+        <item name="android:thumb">@drawable/seek_thumb</item>
+        <item name="android:background">#00000000</item>
+        <item name="android:progressDrawable">@drawable/seek_progress</item>
+    </style>
+
+    <style name="seek.options" parent="seek">
+        <item name="layout_constraintWidth_percent">0.8</item>
+        <item name="layout_constraintHeight_percent">0.15</item>
+        <item name="layout_constraintHorizontal_bias">1</item>
+    </style>
+
+    <style name="seek.game" parent="seek">
+        <item name="layout_constraintWidth_percent">0.8</item>
+        <item name="layout_constraintHeight_percent">0.35</item>
+    </style>
+
+    <style name="input" parent="rel">
+        <item name="android:background">@drawable/round_box</item>
+        <item name="android:textColor">#222222</item>
+        <item name="android:textColorHint">#444444</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="input.options" parent="input">
+        <item name="layout_constraintWidth_percent">0.8</item>
+        <item name="layout_constraintHeight_percent">0.15</item>
+        <item name="layout_constraintHorizontal_bias">1</item>
+    </style>
+
+    <style name="input.signIn" parent="input">
+        <item name="layout_constraintWidth_percent">0.5</item>
+        <item name="layout_constraintHeight_percent">0.12</item>
+    </style>
+
+    <style name="input.signUp" parent="input">
+        <item name="layout_constraintWidth_percent">0.5</item>
+        <item name="layout_constraintHeight_percent">0.12</item>
+    </style>
+
+    <style name="btn" parent="rel">
+        <item name="layout_constraintWidth_percent">0.04</item>
+        <item name="layout_constraintDimensionRatio">1</item>
+    </style>
+
+    <style name="btn.big" parent="rel">
+        <item name="layout_constraintWidth_percent">0.06</item>
+        <item name="layout_constraintDimensionRatio">1</item>
+    </style>
+
+    <style name="text_list">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="skin_img" parent="rel">
+        <item name="layout_constraintHeight_percent">0.6</item>
+        <item name="layout_constraintDimensionRatio">1</item>
+    </style>
+
+    <style name="options_img" parent="rel">
+        <item name="layout_constraintHorizontal_bias">0</item>
+        <item name="layout_constraintHeight_percent">0.15</item>
+        <item name="layout_constraintDimensionRatio">1</item>
+    </style>
+
+    <style name="game_img">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="layout_constraintHeight_percent">0.35</item>
+        <item name="layout_constraintDimensionRatio">1</item>
+    </style>
+
+    <style name="game_txt">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="layout_constraintHeight_percent">0.35</item>
+    </style>
+
+</resources>

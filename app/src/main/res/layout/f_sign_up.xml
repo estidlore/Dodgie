@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.F_SignUp">
+    <EditText
+        android:id="@+id/signUp_alias"
+        style="@style/input.signUp"
+        app:layout_constraintVertical_bias="0.1"
+        android:hint="Alias"
+        android:inputType="textPersonName" />
+    <EditText
+        android:id="@+id/signUp_email"
+        style="@style/input.signUp"
+        app:layout_constraintVertical_bias="0.3"
+        android:hint="Email"
+        android:inputType="textEmailAddress" />
+    <EditText
+        android:id="@+id/signUp_pass"
+        style="@style/input.signUp"
+        app:layout_constraintVertical_bias="0.5"
+        android:hint="Password"
+        android:inputType="textPassword" />
+    <EditText
+        android:id="@+id/signUp_pass2"
+        style="@style/input.signUp"
+        app:layout_constraintVertical_bias="0.7"
+        android:hint="Confirm password"
+        android:inputType="textPassword" />
+    <Button
+        android:id="@+id/signUp_btn"
+        style="@style/input.signUp"
+        app:layout_constraintWidth_percent="0.3"
+        app:layout_constraintVertical_bias="0.9"
+        android:text="Sign up" />
+</androidx.constraintlayout.widget.ConstraintLayout>

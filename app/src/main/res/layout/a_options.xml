@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg"
+    tools:context=".activity.A_Options">
+
+    <ImageView
+        android:id="@+id/opts_back"
+        style="@style/btn"
+        app:layout_constraintHorizontal_bias="0.982"
+        app:layout_constraintVertical_bias="0.032"
+        app:srcCompat="@drawable/back" />
+
+    <!-- SETTINGS -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/settings"
+        style="@style/rel"
+        app:layout_constraintDimensionRatio="1.2"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintWidth_percent="0.3">
+
+        <ImageView
+            style="@style/options_img"
+            app:layout_constraintVertical_bias="0.05"
+            app:srcCompat="@drawable/sound" />
+
+        <ImageView
+            style="@style/options_img"
+            app:layout_constraintVertical_bias="0.35"
+            app:srcCompat="@drawable/music" />
+
+        <ImageView
+            style="@style/options_img"
+            app:layout_constraintVertical_bias="0.65"
+            app:srcCompat="@drawable/abc" />
+
+        <ImageView
+            style="@style/options_img"
+            app:layout_constraintVertical_bias="0.95"
+            app:srcCompat="@drawable/vibration" />
+
+        <SeekBar
+            android:id="@+id/opts_seek_sound"
+            style="@style/seek.options"
+            android:thumb="@drawable/seek_thumb"
+            app:layout_constraintVertical_bias="0.05" />
+
+        <SeekBar
+            android:id="@+id/opts_seek_music"
+            style="@style/seek.options"
+            android:thumb="@drawable/seek_thumb"
+            app:layout_constraintVertical_bias="0.35" />
+
+        <Spinner
+            android:id="@+id/opts_spin_lang"
+            style="@style/input.options"
+            android:entries="@array/languages"
+            app:layout_constraintVertical_bias="0.65" />
+
+        <CheckBox
+            android:id="@+id/opts_check_vibration"
+            style="@style/input.options"
+            android:background="#0000"
+            android:textColor="#FFFFFF"
+            android:theme="@style/dark"
+            app:layout_constraintVertical_bias="0.95" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- SIGN OPTIONS -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/opts_sign"
+        style="@style/rel"
+        app:layout_constraintWidth_percent="0.25"
+        app:layout_constraintDimensionRatio="1.5"
+        app:layout_constraintHorizontal_bias="0.8">
+        <Button
+            android:id="@+id/opts_signIn"
+            style="@style/rel"
+            app:layout_constraintHeight_percent="0.4"
+            app:layout_constraintVertical_bias="0"
+            android:text="Sign in"/>
+        <Button
+            android:id="@+id/opts_signUp"
+            style="@style/rel"
+            app:layout_constraintHeight_percent="0.4"
+            app:layout_constraintVertical_bias="1"
+            android:text="Sign up"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- F_SIGN -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/opts_pop"
+        style="@style/rel"
+        android:background="@drawable/round_panel"
+        android:visibility="gone"
+        app:layout_constraintWidth_percent="0.7"
+        app:layout_constraintHeight_percent="0.7">
+        <FrameLayout
+            android:id="@+id/opts_pop_frg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/opts_close"
+        style="@style/btn"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintVertical_bias="0.15"
+        android:src="@drawable/close"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

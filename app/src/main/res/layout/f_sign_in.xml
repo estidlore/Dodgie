@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.F_SignIn">
+    <EditText
+        android:id="@+id/signIn_alias"
+        style="@style/input.signIn"
+        app:layout_constraintVertical_bias="0.1"
+        android:hint="Alias"
+        android:inputType="textPersonName" />
+    <EditText
+        android:id="@+id/signIn_pass"
+        style="@style/input.signIn"
+        app:layout_constraintVertical_bias="0.28"
+        android:hint="Password"
+        android:inputType="textPassword" />
+    <Button
+        android:id="@+id/signIn_btn"
+        style="@style/input.signIn"
+        app:layout_constraintWidth_percent="0.3"
+        app:layout_constraintVertical_bias="0.46"
+        android:text="Sign in" />
+    <Button
+        android:id="@+id/signIn_forgotAlias"
+        style="@style/input.signIn"
+        app:layout_constraintVertical_bias="0.72"
+        android:text="Forgot alias" />
+    <Button
+        android:id="@+id/signIn_forgotPass"
+        style="@style/input.signIn"
+        app:layout_constraintVertical_bias="0.9"
+        android:text="Forgot password" />
+</androidx.constraintlayout.widget.ConstraintLayout>
