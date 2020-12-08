@@ -5,7 +5,8 @@
     android:id="@+id/game"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_bg">
+    android:background="@color/color_bg"
+    tools:ignore="MissingConstraints" >
 
     <com.blieve.dodgie.controller.ControlGame
         android:id="@+id/game_canvas"

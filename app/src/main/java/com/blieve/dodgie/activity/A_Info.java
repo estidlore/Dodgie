@@ -11,13 +11,11 @@ import com.blieve.dodgie.util.Droid;
 
 import static android.content.Intent.ACTION_VIEW;
 import static android.net.Uri.parse;
-import static com.blieve.dodgie.activity.A_Options.langIndex;
 
-public class A_Info extends Droid {
+public class A_Info extends Droid.BaseActivity {
 
     private ImageView back_img, blieve_img, game_img;
     private TextView about_txt;
-    private Intent _home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,22 +30,20 @@ public class A_Info extends Droid {
     }
 
     private void init() {
-        int[] txts = {R.string.about, R.string.about_es};
-        about_txt.setText(txts[langIndex]);
-        _home = new Intent(A_Info.this, A_Home.class);
+        clickListen();
+        initLangs();
+    }
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(v == back_img) {
-                    startActivity(_home);
-                } else if(v == blieve_img) {
-                    String page = "http://www.facebook.com/blieve_games/";
-                    startActivity(new Intent(ACTION_VIEW, parse(page)));
-                } else if(v == game_img) {
-                    String page = "http://www.facebook.com/Dodgie-101790741479191/";
-                    startActivity(new Intent(ACTION_VIEW, parse(page)));
-                }
+    private void clickListen() {
+        View.OnClickListener onClickListener = v -> {
+            if(v == back_img) {
+                finish();
+            } else if(v == blieve_img) {
+                String page = "http://www.facebook.com/blieve_games/";
+                startActivity(new Intent(ACTION_VIEW, parse(page)));
+            } else if(v == game_img) {
+                String page = "http://www.facebook.com/Dodgie-101790741479191/";
+                startActivity(new Intent(ACTION_VIEW, parse(page)));
             }
         };
         back_img.setOnClickListener(onClickListener);
@@ -55,6 +51,18 @@ public class A_Info extends Droid {
         game_img.setOnClickListener(onClickListener);
     }
 
-
+    private void initLangs() {
+        String about = "about";
+        int enIndex = Droid.Lang.indexOf(A_Options.ENGLISH),
+                esIndex = Droid.Lang.indexOf(A_Options.SPANISH);
+        Droid.Lang lang = new Droid.Lang();
+        lang.addText(about, enIndex,
+                "Development and design:\n" +
+                "Estid Lozano");
+        lang.addText(about, esIndex,
+                "Desarrollo y diseño:\n" +
+                "Estid Lozano");
+        about_txt.setText(lang.getText(about));
+    }
 
 }

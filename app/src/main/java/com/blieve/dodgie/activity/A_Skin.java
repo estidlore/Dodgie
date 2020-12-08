@@ -1,7 +1,6 @@
 package com.blieve.dodgie.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -21,7 +20,7 @@ import static android.view.View.VISIBLE;
 import static com.blieve.dodgie.model.User.ALIAS;
 import static com.blieve.dodgie.model.User.STYLE;
 
-public class A_Skin extends Droid {
+public class A_Skin extends Droid.BaseActivity {
 
     private final static int[][] styles = {
             // FACES
@@ -204,7 +203,6 @@ public class A_Skin extends Droid {
     private ImageView back_img, skin_img, block_img;
     private ImageView[] section_imgs, style_imgs;
     private int style, section;
-    private Intent _home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,18 +235,10 @@ public class A_Skin extends Droid {
         section = -1;
         setStyle(0);
         setSection(0);
-        setPreviews();
-        _home = new Intent(A_Skin.this, A_Home.class);
         clickListen();
-        skin_styles.post(new Runnable() {
-            @Override
-            public void run() {
-                iniStyles();
-            }
-        });
+        skin_styles.post(this::iniStyles);
     }
 
-    @SuppressLint("NewApi")
     private void iniStyles() {
         // vars
         final Resources res = getResources();
@@ -275,25 +265,22 @@ public class A_Skin extends Droid {
                 Drawable d = res.getDrawable(i == 1 ? R.drawable.block : R.drawable.circle);
                 if(i == 2) {
                     d.setColorFilter(styles[2][count], MULTIPLY);
-                    img.setImageBitmap(drawableToBitmap(d, size, size));
+                    img.setImageBitmap(Droid.Img.drawToBmp(d, size, size));
                 } else {
                     Drawable d2 = res.getDrawable(style(i, count));
                     d2.setColorFilter(0xFF000000, MULTIPLY);
-                    img.setImageBitmap(bitmapMerge(
-                            drawableToBitmap(d, size, size),
-                            drawableToBitmap(d2, size, size)
+                    img.setImageBitmap(Droid.Img.bmpMerge(
+                            Droid.Img.drawToBmp(d, size, size),
+                            Droid.Img.drawToBmp(d2, size, size)
                     ));
                 }
 
                 final int finalCount = count, finalI = i;
-                img.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int st = style * 3 + section;
-                        user.setStyle(st, finalCount);
-                        prefs.edit().putInt(STYLE + st, finalCount).apply();
-                        setPreviews();
-                    }
+                img.setOnClickListener(v -> {
+                    int st = style * 3 + section;
+                    user.setStyle(st, finalCount);
+                    prefs.edit().putInt(STYLE + st, finalCount).apply();
+                    setPreviews();
                 });
                 l.addView(img);
                 if(++index == n) {
@@ -305,28 +292,29 @@ public class A_Skin extends Droid {
             }
             style_lyts[i].addView(l);
         }
+        setPreviews();
     }
 
     private void setPreviews() {
         Resources res = getResources();
         User user = User.get();
-        int prevSize = (int) (SCREEN_W * 0.07);
+        int prevSize = Droid.width(7);
         Drawable skin = res.getDrawable(R.drawable.circle),
                 face = res.getDrawable(user.style(0));
         skin.setColorFilter(user.style(1), MULTIPLY);
         face.setColorFilter(user.style(2), MULTIPLY);
-        skin_img.setImageBitmap(bitmapMerge(
-                drawableToBitmap(skin, prevSize, prevSize),
-                drawableToBitmap(face, prevSize, prevSize)
+        skin_img.setImageBitmap(Droid.Img.bmpMerge(
+                Droid.Img.drawToBmp(skin, prevSize, prevSize),
+                Droid.Img.drawToBmp(face, prevSize, prevSize)
         ));
         Drawable block = res.getDrawable(R.drawable.block),
                 blockFace = res.getDrawable(user.style(3));
         block.setColorFilter(user.style(4), MULTIPLY);
         blockFace.setColorFilter(user.style(5), MULTIPLY);
 
-        block_img.setImageBitmap(bitmapMerge(
-                drawableToBitmap(block, prevSize, prevSize),
-                drawableToBitmap(blockFace, prevSize, prevSize)
+        block_img.setImageBitmap(Droid.Img.bmpMerge(
+                Droid.Img.drawToBmp(block, prevSize, prevSize),
+                Droid.Img.drawToBmp(blockFace, prevSize, prevSize)
         ));
     }
 
@@ -357,24 +345,21 @@ public class A_Skin extends Droid {
     }
 
     private void clickListen() {
-        View.OnClickListener clickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (v == back_img) {
-                    startActivity(_home);
+        View.OnClickListener clickListener = v -> {
+            if (v == back_img) {
+                finish();
+                return;
+            }
+            for(int i = style_imgs.length - 1; i >= 0; i--) {
+                if(v == style_imgs[i]) {
+                    setStyle(i);
                     return;
                 }
-                for(int i = style_imgs.length - 1; i >= 0; i--) {
-                    if(v == style_imgs[i]) {
-                        setStyle(i);
-                        return;
-                    }
-                }
-                for(int i = section_imgs.length - 1; i >= 0; i--) {
-                    if(v == section_imgs[i]) {
-                        setSection(i);
-                        return;
-                    }
+            }
+            for(int i = section_imgs.length - 1; i >= 0; i--) {
+                if(v == section_imgs[i]) {
+                    setSection(i);
+                    return;
                 }
             }
         };

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 
 import com.blieve.dodgie.activity.A_Skin;
 import com.blieve.dodgie.fragment.F_Mode;
+import com.blieve.dodgie.util.Droid;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -14,9 +15,7 @@ public class User {
     private static User instance;
 
     public static User get() {
-        if(instance == null) {
-            instance = new User();
-        }
+        if(instance == null) instance = new User();
         return instance;
     }
 

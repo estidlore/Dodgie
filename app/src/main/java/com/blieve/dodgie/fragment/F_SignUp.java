@@ -1,6 +1,5 @@
 package com.blieve.dodgie.fragment;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +13,7 @@ import android.widget.EditText;
 
 import com.blieve.dodgie.R;
 import com.blieve.dodgie.activity.A_Options;
+import com.blieve.dodgie.util.Droid;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -22,15 +22,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static android.content.Context.MODE_PRIVATE;
-import static com.blieve.dodgie.activity.A_Options.PREF_CONFIG;
-
 public class F_SignUp extends Fragment {
 
     private EditText inp_alias, inp_email, inp_pass, inp_pass2;
     private Button btn_signUp;
-    private int lang;
     FirebaseAuth auth;
+
+    private Droid.Lang lang;
+    private final String invalidAlias = "invalidAlias",
+            invalidPassword = "invalidPass",
+            invalidConfirmPassword = "invalidPass2",
+            requiredField = "required";
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
@@ -48,20 +50,15 @@ public class F_SignUp extends Fragment {
     }
 
     private void init() {
-        SharedPreferences pref = getActivity().getSharedPreferences(PREF_CONFIG, MODE_PRIVATE);
-        lang = pref.getInt(A_Options.LANGUAGE, 0);
-        setTextsLang();
+        initLang();
         auth = FirebaseAuth.getInstance();
         clickListen();
     }
 
     private void clickListen() {
-        View.OnClickListener onclick = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(v == btn_signUp) {
-                    signUp();
-                }
+        View.OnClickListener onclick = v -> {
+            if(v == btn_signUp) {
+                signUp();
             }
         };
         btn_signUp.setOnClickListener(onclick);
@@ -79,13 +76,9 @@ public class F_SignUp extends Fragment {
         final boolean[] completed = {false};
         if(validate(alias, pass, pass2)) {
             auth.createUserWithEmailAndPassword(email, pass)
-                    .addOnCompleteListener(getActivity(),
-                    new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful()) {
-                        completed[0] = true;
-                    }
+                    .addOnCompleteListener(getActivity(), task -> {
+                if(task.isSuccessful()) {
+                    completed[0] = true;
                 }
             });
         }
@@ -94,27 +87,15 @@ public class F_SignUp extends Fragment {
 
     private boolean validate(@NotNull String alias, String pass, String pass2) {
         if(alias.length() > 12) {
-            String[] msg = new String[]{
-                    "Alias up to 12 characters",
-                    "Alias hasta 12 caracteres"
-            };
-            inp_alias.setError(msg[lang]);
+            inp_alias.setError(lang.getText(alias));
             inp_alias.requestFocus();
             return false;
         } else if(pass.length() > 15) {
-            String[] msg = new String[]{
-                    "Password up to 12 characters",
-                    "Contraseña hasta 12 caracteres"
-            };
-            inp_pass.setError(msg[lang]);
+            inp_pass.setError(lang.getText(invalidPassword));
             inp_pass.requestFocus();
             return false;
         } else if(!pass2.equals(pass)) {
-            String[] msg = new String[]{
-                    "The passwords do not match",
-                    "Las contraseñas no coinciden"
-            };
-            inp_pass2.setError(msg[lang]);
+            inp_pass2.setError(lang.getText(invalidConfirmPassword));
             inp_pass.requestFocus();
             return false;
         }
@@ -128,11 +109,7 @@ public class F_SignUp extends Fragment {
     private String require(@NotNull EditText txt) {
         String val = txt.getText().toString().trim();
         if(val.isEmpty()) {
-            String[] msg = new String[]{
-                    "Field required",
-                    "Campo requerido"
-            };
-            txt.setError(msg[lang]);
+            txt.setError(lang.getText(requiredField));
             txt.requestFocus();
             return null;
         }
@@ -140,27 +117,41 @@ public class F_SignUp extends Fragment {
         return val;
     }
 
-    private void setTextsLang() {
-        inp_alias.setHint(new String[]{
-                "Alias",
-                "Alias"
-        }[lang]);
-        inp_email.setHint(new String[]{
-                "Email",
-                "Correo"
-        }[lang]);
-        inp_pass.setHint(new String[]{
-                "Password",
-                "Contraseña"
-        }[lang]);
-        inp_pass2.setHint(new String[]{
-                "Confirm password",
-                "Confirmar contraseña"
-        }[lang]);
-        btn_signUp.setText(new String[]{
-                "Sign up",
-                "Registrarse"
-        }[lang]);
+    private void initLang() {
+        int english = Droid.Lang.indexOf(A_Options.ENGLISH),
+                spanish = Droid.Lang.indexOf(A_Options.SPANISH);
+        String alias = "alias",
+                email = "email",
+                password = "pass",
+                confirmPassword = "pass2",
+                signUp = "signUp";
+        lang = new Droid.Lang();
+
+        lang.addText(alias, english, "Alias");
+        lang.addText(alias, spanish, "Alias");
+        lang.addText(email, english, "Email");
+        lang.addText(email, spanish, "Correo");
+        lang.addText(password, english, "Password");
+        lang.addText(password, spanish, "Contraseña");
+        lang.addText(confirmPassword, english, "Confirm password");
+        lang.addText(confirmPassword, spanish, "Confirmar contraseña");
+        lang.addText(signUp, english, "Sign up");
+        lang.addText(signUp, spanish, "Registrarse");
+
+        lang.addText(invalidAlias, english, "Alias too long");
+        lang.addText(invalidAlias, spanish, "Alias demasiado largo");
+        lang.addText(invalidPassword, english, "Password too long");
+        lang.addText(invalidPassword, spanish, "Contraseña demasiado larga");
+        lang.addText(invalidPassword, english, "The passwords do not match");
+        lang.addText(invalidPassword, spanish, "Las contraseñas no coinciden");
+        lang.addText(requiredField, english, "Required field");
+        lang.addText(requiredField, spanish, "Campo requerido");
+
+        inp_alias.setHint(alias);
+        inp_email.setHint(email);
+        inp_pass.setHint(password);
+        inp_pass2.setHint(confirmPassword);
+        btn_signUp.setText(signUp);
     }
 
 }

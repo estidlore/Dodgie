@@ -1,6 +1,7 @@
 package com.blieve.dodgie.model;
 
-import static com.blieve.dodgie.controller.ControlGame.CELL_W;
+import com.blieve.dodgie.controller.ControlGame;
+
 import static com.blieve.dodgie.util.Droid.SCREEN_H;
 import static com.blieve.dodgie.util.Droid.SCREEN_W;
 import static java.lang.Math.signum;
@@ -28,12 +29,12 @@ public class Player extends GameObject {
     }
 
     public void setMaxVX(float v) {
-        maxVX = v * CELL_W;
+        maxVX = v * ControlGame.CELL_W;
         aX = (float) sqrt(1 / aXTime) * maxVX;
     }
 
     public void setMaxVY(float v) {
-        maxVY = v * CELL_W;
+        maxVY = v * ControlGame.CELL_W;
         aY = (float) sqrt(1 / aYTime) * maxVY;
     }
 

@@ -23,15 +23,15 @@
             style="@style/text_list"
             android:text="Clasic" />
         <TextView
-            android:id="@+id/mode_txt_vertical"
+            android:id="@+id/mode_txt_party"
             style="@style/text_list"
             android:text="Vertical" />
         <TextView
-            android:id="@+id/mode_txt_party"
+            android:id="@+id/mode_txt_overturned"
             style="@style/text_list"
             android:text="¡Party!" />
         <TextView
-            android:id="@+id/mode_txt_overturned"
+            android:id="@+id/mode_txt_gravity"
             style="@style/text_list"
             android:text="Overturned" />
     </LinearLayout>

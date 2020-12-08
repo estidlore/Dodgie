@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.F_SignIn">
+    tools:context=".fragment.F_SignIn"
+    tools:ignore="MissingConstraints" >
     <EditText
         android:id="@+id/signIn_alias"
         style="@style/input.signIn"

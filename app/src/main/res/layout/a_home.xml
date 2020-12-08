@@ -2,9 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_home"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:ignore="MissingConstraints">
 
     <com.blieve.dodgie.controller.ControlHome
         android:id="@+id/home_control"
@@ -14,35 +16,35 @@
     <ImageView
         android:id="@+id/home_mode"
         style="@style/rel"
-        android:src="@drawable/play"
+        app:srcCompat="@drawable/play"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintWidth_percent="0.15" />
 
     <ImageView
         android:id="@+id/home_info"
         style="@style/btn"
-        android:src="@drawable/info"
+        app:srcCompat="@drawable/info"
         app:layout_constraintHorizontal_bias="0.982"
         app:layout_constraintVertical_bias="0.968" />
 
     <ImageView
         android:id="@+id/home_leaderboard"
         style="@style/btn"
-        android:src="@drawable/leaderboard"
+        app:srcCompat="@drawable/leaderboard"
         app:layout_constraintHorizontal_bias="0.076"
         app:layout_constraintVertical_bias="0.968" />
 
     <ImageView
         android:id="@+id/home_options"
         style="@style/btn"
-        android:src="@drawable/options"
+        app:srcCompat="@drawable/options"
         app:layout_constraintHorizontal_bias="0.018"
         app:layout_constraintVertical_bias="0.968" />
 
     <ImageView
         android:id="@+id/home_skin"
         style="@style/btn"
-        android:src="@drawable/circle"
+        app:srcCompat="@drawable/circle"
         app:layout_constraintHorizontal_bias="0.19"
         app:layout_constraintWidth_percent="0.08" />
 
@@ -66,7 +68,7 @@
         android:visibility="gone"
         app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintVertical_bias="0.15"
-        android:src="@drawable/close"/>
+        app:srcCompat="@drawable/close"/>
     <!-- RESOURCES -->
     <LinearLayout
         android:id="@+id/home_data"
@@ -80,7 +82,7 @@
             android:id="@+id/home_coins"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/coin" />
+            app:srcCompat="@drawable/coin" />
 
         <TextView
             android:id="@+id/home_txt_coins"
@@ -98,7 +100,7 @@
             android:id="@+id/home_diamonds"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/diamond" />
+            app:srcCompat="@drawable/diamond" />
 
         <TextView
             android:id="@+id/home_txt_diamonds"

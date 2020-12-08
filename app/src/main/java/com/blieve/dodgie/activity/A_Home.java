@@ -2,6 +2,7 @@ package com.blieve.dodgie.activity;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -16,12 +17,7 @@ import com.blieve.dodgie.model.User;
 import com.blieve.dodgie.R;
 import com.blieve.dodgie.util.Droid;
 
-import static android.graphics.PorterDuff.Mode.MULTIPLY;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static java.lang.String.valueOf;
-
-public class A_Home extends Droid {
+public class A_Home extends Droid.BaseActivity {
 
     private ConstraintLayout pop;
     private ControlHome control;
@@ -46,33 +42,24 @@ public class A_Home extends Droid {
         init();
     }
 
+    @Override
     public void onResume() {
         super.onResume();
+        setPlayerStyle();
+        control.setBlockStyle();
         control.start();
     }
 
+    @Override
     public void onPause() {
         super.onPause();
         control.stop();
+        closePop();
     }
 
     private void init() {
-        pop.setVisibility(GONE);
-        imgMode.setVisibility(VISIBLE);
-        txtCoins.setText(valueOf(User.get().coins));
-        txtGems.setText(valueOf(User.get().gems));
-
-        int diameter = (int) (SCREEN_W * 0.08);
-        User user = User.get();
-        Resources res = getResources();
-        Drawable skin = res.getDrawable(R.drawable.circle),
-                face = res.getDrawable(user.style(0));
-        skin.setColorFilter(user.style(1), MULTIPLY);
-        face.setColorFilter(user.style(2), MULTIPLY);
-        imgSkin.setImageBitmap(bitmapMerge(
-                drawableToBitmap(skin, diameter, diameter),
-                drawableToBitmap(face, diameter, diameter)
-        ));
+        txtCoins.setText(String.valueOf(User.get().coins));
+        txtGems.setText(String.valueOf(User.get().gems));
 
         _info = new Intent(A_Home.this, A_Info.class);
         _leaderBoard = new Intent(A_Home.this, A_Leaderboard.class);
@@ -85,31 +72,25 @@ public class A_Home extends Droid {
     }
 
     private void clickListener() {
-        View.OnClickListener clickListen = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(v == imgClose) {
-                    imgClose.setVisibility(GONE);
-                    pop.setVisibility(GONE);
-                    imgMode.setVisibility(VISIBLE);
-                    imgSkin.setVisibility(VISIBLE);
-                } else if(v == imgMode) {
-                    imgMode.setVisibility(GONE);
-                    imgSkin.setVisibility(GONE);
-                    pop.setVisibility(VISIBLE);
-                    imgClose.setVisibility(VISIBLE);
-                } else {
-                    //sub-menus
-                    control.stop();
-                    if(v == imgInfo) {
-                        startActivity(_info);
-                    } else if(v == imgLeaderBoard) {
-                        startActivity(_leaderBoard);
-                    } else if(v == imgOptions) {
-                        startActivity(_options);
-                    }else if(v == imgSkin) {
-                        startActivity(_skin);
-                    }
+        View.OnClickListener clickListen = v -> {
+            if(v == imgClose) {
+                closePop();
+            } else if(v == imgMode) {
+                imgMode.setVisibility(View.GONE);
+                imgSkin.setVisibility(View.GONE);
+                pop.setVisibility(View.VISIBLE);
+                imgClose.setVisibility(View.VISIBLE);
+            } else {
+                //sub-menus
+                control.stop();
+                if(v == imgInfo) {
+                    startActivity(_info);
+                } else if(v == imgLeaderBoard) {
+                    startActivity(_leaderBoard);
+                } else if(v == imgOptions) {
+                    startActivity(_options);
+                }else if(v == imgSkin) {
+                    startActivity(_skin);
                 }
             }
         };
@@ -121,10 +102,25 @@ public class A_Home extends Droid {
         imgSkin.setOnClickListener(clickListen);
     }
 
-    /*private boolean pointInCircle(float pX, float pY, float cX, float cY, float cR) {
-        float dx = pX - cX,
-                dy = pY - cY;
-        return Math.sqrt(dx * dx + dy * dy) <= cR;
-    }*/
+    private void closePop() {
+        imgClose.setVisibility(View.GONE);
+        pop.setVisibility(View.GONE);
+        imgMode.setVisibility(View.VISIBLE);
+        imgSkin.setVisibility(View.VISIBLE);
+    }
+
+    private void setPlayerStyle() {
+        Resources res = getResources();
+        Drawable skin = res.getDrawable(R.drawable.circle),
+                face = res.getDrawable(User.get().style(0));
+        skin.setColorFilter(User.get().style(1), PorterDuff.Mode.MULTIPLY);
+        face.setColorFilter(User.get().style(2), PorterDuff.Mode.MULTIPLY);
+
+        int diameter = Droid.width(8);
+        imgSkin.setImageBitmap(Droid.Img.bmpMerge(
+                Droid.Img.drawToBmp(skin, diameter, diameter),
+                Droid.Img.drawToBmp(face, diameter, diameter)
+        ));
+    }
 
 }

@@ -12,9 +12,10 @@ import android.view.View;
 import com.blieve.dodgie.R;
 import com.blieve.dodgie.model.Block;
 import com.blieve.dodgie.model.GameStats;
+import com.blieve.dodgie.model.Obstacle;
 import com.blieve.dodgie.model.Player;
 import com.blieve.dodgie.model.User;
-import com.blieve.dodgie.util.Listen;
+import com.blieve.dodgie.util.Droid;
 import com.blieve.dodgie.util.Update;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,8 +28,6 @@ import static android.graphics.Paint.Align.CENTER;
 import static android.graphics.Paint.Align.LEFT;
 import static android.graphics.PorterDuff.Mode.MULTIPLY;
 import static com.blieve.dodgie.model.GameStats.PTS_PER_LVL;
-import static com.blieve.dodgie.util.Droid.bitmapMerge;
-import static com.blieve.dodgie.util.Droid.drawableToBitmap;
 import static com.blieve.dodgie.util.Droid.SCREEN_H;
 import static com.blieve.dodgie.util.Droid.SCREEN_W;
 import static java.lang.Integer.signum;
@@ -43,7 +42,7 @@ public class ControlGame extends View {
 
     private final ArrayList<Block> blocks;
     private final GameStats stats;
-    private final Listen gameOverListen;
+    private final Droid.Listen gameOverListen;
     private final Player player;
     private final Update update;
     private final float d, originX, originY, spt, x, y;
@@ -69,11 +68,12 @@ public class ControlGame extends View {
                 invalidate();
             }
         };
+
         stats = new GameStats();
         player = new Player();
         keys = new boolean[3];
         blocks = new ArrayList<>();
-        gameOverListen = new Listen();
+        gameOverListen = new Droid.Listen();
 
         d = CELL_W * (stats.mode() == 2 ? 4 : 3);
         originX = SCREEN_W / 2.0f;
@@ -93,16 +93,16 @@ public class ControlGame extends View {
                 face = res.getDrawable(user.style(0));
         skin.setColorFilter(user.style(1), MULTIPLY);
         face.setColorFilter(user.style(2), MULTIPLY);
-        skin_bmp = drawableToBitmap(skin, diameter, diameter);
-        face_bmp = drawableToBitmap(face, diameter, diameter);
+        skin_bmp = Droid.Img.drawToBmp(skin, diameter, diameter);
+        face_bmp = Droid.Img.drawToBmp(face, diameter, diameter);
         // Block drawable
         Drawable block = res.getDrawable(R.drawable.block),
                 blockFace = res.getDrawable(user.style(3));
         block.setColorFilter(user.style(4), MULTIPLY);
         blockFace.setColorFilter(user.style(5), MULTIPLY);
-        block_bmp = bitmapMerge(
-                drawableToBitmap(block, size, size),
-                drawableToBitmap(blockFace, size, size)
+        block_bmp = Droid.Img.bmpMerge(
+                Droid.Img.drawToBmp(block, size, size),
+                Droid.Img.drawToBmp(blockFace, size, size)
         );
 
         rotate = stats.mode() == 1;
@@ -271,7 +271,7 @@ public class ControlGame extends View {
         aY = keys[0] ? -1 : 1;
     }
 
-    public Listen gameOverListen() {
+    public Droid.Listen gameOverListen() {
         return gameOverListen;
     }
 

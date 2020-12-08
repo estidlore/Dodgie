@@ -1,6 +1,5 @@
 package com.blieve.dodgie.fragment;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,20 +12,22 @@ import android.widget.EditText;
 
 import com.blieve.dodgie.R;
 import com.blieve.dodgie.activity.A_Options;
+import com.blieve.dodgie.util.Droid;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static android.content.Context.MODE_PRIVATE;
-import static com.blieve.dodgie.activity.A_Options.PREF_CONFIG;
-
 public class F_SignIn extends Fragment {
 
     private EditText inp_alias, inp_pass;
     private Button btn_signIn;
-    private int lang;
     FirebaseAuth auth;
+
+    private Droid.Lang lang;
+    private final String invalidAlias = "invalidAlias",
+            invalidPassword = "invalidPass",
+            requiredField = "required";
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
@@ -42,20 +43,15 @@ public class F_SignIn extends Fragment {
     }
 
     private void init() {
-        SharedPreferences pref = getActivity().getSharedPreferences(PREF_CONFIG, MODE_PRIVATE);
-        lang = pref.getInt(A_Options.LANGUAGE, 0);
-        setTextsLang();
+        initLang();
         auth = FirebaseAuth.getInstance();
         clickListen();
     }
 
     private void clickListen() {
-        View.OnClickListener onclick = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(v == btn_signIn) {
-                    signIn();
-                }
+        View.OnClickListener onclick = v -> {
+            if(v == btn_signIn) {
+                signIn();
             }
         };
         btn_signIn.setOnClickListener(onclick);
@@ -75,17 +71,11 @@ public class F_SignIn extends Fragment {
 
     private boolean validate(@NotNull String alias, String pass) {
         if(alias.length() > 12) {
-            inp_alias.setError(new String[]{
-                    "Invalid alias",
-                    "Alias inválido"
-            }[lang]);
+            inp_alias.setError(lang.getText(invalidAlias));
             inp_alias.requestFocus();
             return false;
         } else if(pass.length() > 15) {
-            inp_pass.setError(new String[]{
-                    "Invalid password",
-                    "Contraseña inválida"
-            }[lang]);
+            inp_pass.setError(lang.getText(invalidPassword));
             inp_pass.requestFocus();
             return false;
         }
@@ -98,11 +88,7 @@ public class F_SignIn extends Fragment {
     private String require(@NotNull EditText txt) {
         String val = txt.getText().toString().trim();
         if(val.isEmpty()) {
-            String[] msg = new String[]{
-                    "Required field",
-                    "Campo requerido"
-            };
-            txt.setError(msg[lang]);
+            txt.setError(requiredField);
             txt.requestFocus();
             return null;
         }
@@ -110,19 +96,32 @@ public class F_SignIn extends Fragment {
         return val;
     }
 
-    private void setTextsLang() {
-        inp_alias.setHint(new String[]{
-                "Alias",
-                "Alias"
-        }[lang]);
-        inp_pass.setHint(new String[]{
-                "Password",
-                "Contraseña"
-        }[lang]);
-        btn_signIn.setText(new String[]{
-                "Sign in",
-                "Ingresar"
-        }[lang]);
+    private void initLang() {
+        int english = Droid.Lang.indexOf(A_Options.ENGLISH),
+                spanish = Droid.Lang.indexOf(A_Options.SPANISH);
+        String alias = "alias",
+                password = "pass",
+                signIn = "signIn";
+        lang = new Droid.Lang();
+
+        lang.addText(alias, english, "Alias");
+        lang.addText(alias, spanish, "Alias");
+        lang.addText(password, english, "Password");
+        lang.addText(password, spanish, "Contraseña");
+        lang.addText(signIn, english, "Sign in");
+        lang.addText(signIn, spanish, "Ingresar");
+
+        lang.addText(invalidAlias, english, "Invalid alias");
+        lang.addText(invalidAlias, spanish, "Alias inválido");
+        lang.addText(invalidPassword, english, "Invalid password");
+        lang.addText(invalidPassword, spanish, "Contraseña inválida");
+        lang.addText(requiredField, english, "Required field");
+        lang.addText(requiredField, spanish, "Campo requerido");
+
+        inp_alias.setHint(lang.getText(alias));
+        inp_pass.setHint(lang.getText(password));
+        btn_signIn.setText(lang.getText(signIn));
+
     }
 
 }

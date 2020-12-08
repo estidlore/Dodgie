@@ -6,11 +6,13 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.blieve.dodgie.R;
 import com.blieve.dodgie.model.Block;
 import com.blieve.dodgie.model.User;
+import com.blieve.dodgie.util.Droid;
 import com.blieve.dodgie.util.Update;
 
 import org.jetbrains.annotations.NotNull;
@@ -19,13 +21,8 @@ import java.util.ArrayList;
 
 import static android.graphics.Color.BLACK;
 import static android.graphics.PorterDuff.Mode.MULTIPLY;
-import static com.blieve.dodgie.controller.ControlGame.CELLS_X;
-import static com.blieve.dodgie.controller.ControlGame.CELLS_Y;
-import static com.blieve.dodgie.controller.ControlGame.CELL_W;
 import static com.blieve.dodgie.util.Droid.SCREEN_H;
 import static com.blieve.dodgie.util.Droid.SCREEN_W;
-import static com.blieve.dodgie.util.Droid.bitmapMerge;
-import static com.blieve.dodgie.util.Droid.drawableToBitmap;
 import static java.lang.Math.random;
 
 public class ControlHome extends View {
@@ -36,17 +33,16 @@ public class ControlHome extends View {
     private final float d, speed, spt, originX, originY;
     private final Update update;
 
-    private final Bitmap block_bmp;
+    private Bitmap block_bmp;
 
     public ControlHome(Context ctx, AttributeSet attrs) {
         super(ctx, attrs);
         int fps = 30;
-        d = CELL_W * 3;
+        d = ControlGame.CELL_W * 3;
         speed = 2;
         spt = 1f / fps;
         originX = SCREEN_W / 2.0f;
         originY = SCREEN_H / 2.0f;
-        Resources res = getResources();
         update = new Update(fps) {
             @Override
             public void tick() {
@@ -54,16 +50,20 @@ public class ControlHome extends View {
                 invalidate();
             }
         };
-        User user = User.get();
+        setBlockStyle();
+    }
+
+    public void setBlockStyle() {
+        Resources res = getResources();
         Drawable block = res.getDrawable(R.drawable.block),
-                blockFace = res.getDrawable(user.style(3));
-        block.setColorFilter(user.style(4), MULTIPLY);
-        blockFace.setColorFilter(user.style(5), MULTIPLY);
+                blockFace = res.getDrawable(User.get().style(3));
+        block.setColorFilter(User.get().style(4), MULTIPLY);
+        blockFace.setColorFilter(User.get().style(5), MULTIPLY);
 
         int size = Block.width();
-        block_bmp = bitmapMerge(
-                drawableToBitmap(block, size, size),
-                drawableToBitmap(blockFace, size, size)
+        block_bmp = Droid.Img.bmpMerge(
+                Droid.Img.drawToBmp(block, size, size),
+                Droid.Img.drawToBmp(blockFace, size, size)
         );
     }
 
@@ -88,9 +88,9 @@ public class ControlHome extends View {
     }
 
     private void addBlocks() { // left and right
-        float x = (CELLS_X + 1) / 2;
-        addBlock(-x, (float) ((random() - 0.5) * (CELLS_Y - 1)), speed);
-        addBlock(x, (float) ((random() - 0.5) * (CELLS_Y - 1)), -speed);
+        float x = (ControlGame.CELLS_X + 1) / 2;
+        addBlock(-x, (float) ((random() - 0.5) * (ControlGame.CELLS_Y - 1)), speed);
+        addBlock(x, (float) ((random() - 0.5) * (ControlGame.CELLS_Y - 1)), -speed);
         // remove the blocks which got out
         while(blocks.get(0).isOut()) {
             blocks.add(blocks.remove(0));

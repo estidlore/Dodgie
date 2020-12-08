@@ -27,14 +27,11 @@ public class Block extends Obstacle {
         /*double dx = clamp(gVars.player.x(), left, right) - gVars.player.x(),
                 dy = clamp(gVars.player.y(), top, bottom) - gVars.player.y();
         return (dx * dx + dy * dy) < gVars.player.r2();*/
+
         float dx = abs(pX - x) - hW; // - w / 2
         float dy = abs(pY - y) - hW; // - h / 2
-        if (dx > pR || dy > pR) {
-            return false;
-        }
-        if (dx <= 0 || dy <= 0) {
-            return true;
-        }
+        if (dx > pR || dy > pR) return false;
+        // if (dx <= 0 || dy <= 0) return true;
         return (dx * dx + dy * dy <= pR * pR);
     }
 

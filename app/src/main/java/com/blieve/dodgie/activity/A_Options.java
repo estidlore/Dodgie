@@ -1,13 +1,11 @@
 package com.blieve.dodgie.activity;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -19,20 +17,23 @@ import com.blieve.dodgie.R;
 import com.blieve.dodgie.fragment.F_SignIn;
 import com.blieve.dodgie.fragment.F_SignUp;
 import com.blieve.dodgie.util.Droid;
-import com.blieve.dodgie.util.Listen;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class A_Options extends Droid {
+public class A_Options extends Droid.BaseActivity {
 
     public final static String
             PREF_CONFIG = "cnfg",
             SOUND = "sond",
             MUSIC = "musc",
             VIBRATION = "vibr",
-            LANGUAGE = "lang";
-    public static int langIndex;
+            LANGUAGE = "lang",
+            ENGLISH  = "en",
+            SPANISH  = "es";
+    private final String
+            SIGN_IN = "signIn",
+            SIGN_UP = "signUp";
 
     private Button btn_signIn, btn_signUp;
     private CheckBox check_vibration;
@@ -42,7 +43,7 @@ public class A_Options extends Droid {
     private Spinner spin_lang;
 
     private SharedPreferences prefs;
-    private Intent _home;
+    private Droid.Lang lang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,18 +65,23 @@ public class A_Options extends Droid {
         init();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        showPop(false);
+    }
+
     private  void init() {
         prefs = getSharedPreferences(PREF_CONFIG, MODE_PRIVATE);
         seek_sound.setProgress(prefs.getInt(SOUND, 100));
         seek_music.setProgress(prefs.getInt(MUSIC, 100));
-        langIndex = prefs.getInt(LANGUAGE, 0);
-        spin_lang.setSelection(langIndex);
+        spin_lang.setSelection(Droid.Lang.getLang());
         check_vibration.setChecked(prefs.getBoolean(VIBRATION, true));
-        _home = new Intent(A_Options.this, A_Home.class);
         spinListen();
         seekListen();
         checkListen();
         clickListen();
+        initLangs();
         setTextsLang();
     }
 
@@ -83,8 +89,8 @@ public class A_Options extends Droid {
         spin_lang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                langIndex = position;
-                prefs.edit().putInt(LANGUAGE, langIndex).apply();
+                Droid.Lang.setLang(position);
+                prefs.edit().putInt(LANGUAGE, position).apply();
                 setTextsLang();
             }
             @Override public void onNothingSelected(AdapterView<?> parent) { }
@@ -92,44 +98,42 @@ public class A_Options extends Droid {
     }
 
     private void seekListen() {
-        SeekBar.OnSeekBarChangeListener seek_listener = new Listen.OnProgressChangeListener() {
+        SeekBar.OnSeekBarChangeListener seek_listener = new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChange(SeekBar seekBar, int progress) {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (seekBar == seek_sound) {
                     prefs.edit().putInt(SOUND, progress).apply();
                 } else if (seekBar == seek_music) {
                     prefs.edit().putInt(MUSIC, progress).apply();
                 }
             }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         };
         seek_sound.setOnSeekBarChangeListener(seek_listener);
         seek_music.setOnSeekBarChangeListener(seek_listener);
     }
 
     private void checkListen() {
-        check_vibration.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton v, boolean isChecked) {
-                if (v == check_vibration) {
-                    prefs.edit().putBoolean(VIBRATION, isChecked).apply();
-                }
+        check_vibration.setOnCheckedChangeListener((v, isChecked) -> {
+            if (v == check_vibration) {
+                prefs.edit().putBoolean(VIBRATION, isChecked).apply();
             }
         });
     }
 
     private void clickListen(){
-        View.OnClickListener clickListen = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (v == img_back) {
-                    startActivity(_home);
-                } else if(v == imgClose) {
-                    setEnabled(true);
-                } else if (v == btn_signIn) {
-                    setFragment(new F_SignIn());
-                } else if(v == btn_signUp) {
-                    setFragment(new F_SignUp());
-                }
+        View.OnClickListener clickListen = v -> {
+            if (v == img_back) {
+                finish();
+            } else if(v == imgClose) {
+                showPop(false);
+            } else if (v == btn_signIn) {
+                setFragment(new F_SignIn());
+            } else if(v == btn_signUp) {
+                setFragment(new F_SignUp());
             }
         };
         img_back.setOnClickListener(clickListen);
@@ -141,25 +145,37 @@ public class A_Options extends Droid {
     private void setFragment(Fragment frg) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.opts_pop_frg, frg).commit();
-        setEnabled(false);
+        showPop(true);
     }
 
-    private void setEnabled(boolean b) {
+    private void showPop(boolean b) {
         if(b) {
-            imgClose.setVisibility(GONE);
-            pop.setVisibility(GONE);
-            settings.setVisibility(VISIBLE);
-            sign.setVisibility(VISIBLE);
-        } else {
             sign.setVisibility(GONE);
             settings.setVisibility(GONE);
             pop.setVisibility(VISIBLE);
             imgClose.setVisibility(VISIBLE);
+        } else {
+            imgClose.setVisibility(GONE);
+            pop.setVisibility(GONE);
+            settings.setVisibility(VISIBLE);
+            sign.setVisibility(VISIBLE);
         }
     }
 
-    private void setTextsLang() {
+    private void initLangs() {
+        int enIndex = Droid.Lang.indexOf(ENGLISH),
+                esIndex = Droid.Lang.indexOf(SPANISH);
+        lang = new Droid.Lang();
+        lang.addText(SIGN_IN, enIndex, "Sign in");
+        lang.addText(SIGN_IN, esIndex, "Ingresar");
 
+        lang.addText(SIGN_UP, enIndex, "Sign up");
+        lang.addText(SIGN_UP, esIndex, "Registrarse");
+    }
+
+    private void setTextsLang() {
+        btn_signIn.setText(lang.getText(SIGN_IN));
+        btn_signUp.setText(lang.getText(SIGN_UP));
     }
 
 }

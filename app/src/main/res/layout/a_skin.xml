@@ -6,12 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#335577"
-    tools:context=".activity.A_Skin">
+    tools:context=".activity.A_Skin"
+    tools:ignore="MissingConstraints" >
 
     <ImageView
         android:id="@+id/skin_back"
         style="@style/btn"
-        android:src="@drawable/back"
+        app:srcCompat="@drawable/back"
         app:layout_constraintHorizontal_bias="0.982"
         app:layout_constraintVertical_bias="0.032"
         tools:ignore="MissingConstraints" />
@@ -29,13 +30,13 @@
         <ImageView
             android:id="@+id/skin_skin_img"
             style="@style/skin_img"
-            android:src="@drawable/circle1"
+            app:srcCompat="@drawable/circle1"
             app:layout_constraintHorizontal_bias="0.15" />
 
         <ImageView
             android:id="@+id/skin_block_img"
             style="@style/skin_img"
-            android:src="@drawable/block1"
+            app:srcCompat="@drawable/block1"
             app:layout_constraintHorizontal_bias="0.85" />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <!-- SUB-SKIN -->
@@ -51,18 +52,18 @@
         <ImageView
             android:id="@+id/skin_style_img"
             style="@style/skin_img"
-            android:src="@drawable/style"
+            app:srcCompat="@drawable/style"
             app:layout_constraintHorizontal_bias="0.1" />
 
         <ImageView
             android:id="@+id/skin_one_img"
             style="@style/skin_img"
-            android:src="@drawable/one" />
+            app:srcCompat="@drawable/one" />
 
         <ImageView
             android:id="@+id/skin_two_img"
             style="@style/skin_img"
-            android:src="@drawable/two"
+            app:srcCompat="@drawable/two"
             app:layout_constraintHorizontal_bias="0.9" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -70,7 +71,7 @@
     <ImageView
         android:id="@+id/skin_skin_preview"
         style="@style/rel"
-        android:src="@drawable/circle"
+        app:srcCompat="@drawable/circle"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintHorizontal_bias="0.42"
         app:layout_constraintVertical_bias="0.2"
@@ -79,7 +80,7 @@
     <ImageView
         android:id="@+id/skin_block_preview"
         style="@style/rel"
-        android:src="@drawable/block"
+        app:srcCompat="@drawable/block"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintHorizontal_bias="0.58"
         app:layout_constraintVertical_bias="0.2"

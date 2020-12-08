@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_bg"
-    tools:context=".activity.A_Options">
+    tools:context=".activity.A_Options"
+    tools:ignore="MissingConstraints" >
 
     <ImageView
         android:id="@+id/opts_back"
@@ -109,6 +110,7 @@
         style="@style/btn"
         app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintVertical_bias="0.15"
-        android:src="@drawable/close"/>
+        android:visibility="gone"
+        app:srcCompat="@drawable/close"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

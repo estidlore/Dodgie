@@ -1,24 +1,22 @@
 package com.blieve.dodgie.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.blieve.dodgie.R;
 import com.blieve.dodgie.controller.ControlGame;
 import com.blieve.dodgie.model.GameStats;
 import com.blieve.dodgie.model.User;
 import com.blieve.dodgie.util.Droid;
-import com.blieve.dodgie.util.Listen;
 
 import static android.view.MotionEvent.ACTION_DOWN;
 import static android.view.MotionEvent.ACTION_UP;
@@ -26,7 +24,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static java.lang.String.valueOf;
 
-public class A_Game extends Droid {
+public class A_Game extends Droid.BaseActivity {
 
     private ConstraintLayout layout, options, resume, settings;
     private ImageView pause_img, play_img, back_img;
@@ -36,7 +34,6 @@ public class A_Game extends Droid {
     private ControlGame control;
     private SharedPreferences prefs;
     private Vibrator vibrator;
-    private Intent _home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,17 +76,16 @@ public class A_Game extends Droid {
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     public void init() {
-        prefs = getSharedPreferences("config", MODE_PRIVATE);
-        seek_sound.setProgress(prefs.getInt("sound", 100));
-        seek_music.setProgress(prefs.getInt("music", 100));
-        boolean vibrate = prefs.getBoolean("vibration", true);
+        prefs = getSharedPreferences(A_Options.PREF_CONFIG, MODE_PRIVATE);
+        seek_sound.setProgress(prefs.getInt(A_Options.SOUND, 100));
+        seek_music.setProgress(prefs.getInt(A_Options.MUSIC, 100));
+        boolean vibrate = prefs.getBoolean(A_Options.VIBRATION, true);
         if(vibrate) vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         if(control.stats().mode() == 3) {
-            arrow_imgs[0].setImageDrawable(getResources().getDrawable(R.drawable.change));
+            arrow_imgs[0].setImageDrawable(ResourcesCompat.getDrawable(getResources(),
+                    R.drawable.change, null));
         }
-        _home = new Intent(A_Game.this, A_Home.class);
         touchListen();
         clickListen();
         seekListen();
@@ -108,41 +104,35 @@ public class A_Game extends Droid {
     private void touchListen() {
         for(int i = arrow_imgs.length - 1; i >= 0; i--) {
             final int fI = i;
-            arrow_imgs[i].setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent ev) {
-                    if(control.play()) {
-                        int action = ev.getActionMasked();
-                        if(action == ACTION_UP) {
-                            arrow_imgs[fI].setScaleX(1);
-                            arrow_imgs[fI].setScaleY(1);
-                            control.setKey(fI, false);
-                        } else if(action == ACTION_DOWN) {
-                            arrow_imgs[fI].setScaleX(0.9f);
-                            arrow_imgs[fI].setScaleY(0.9f);
-                            control.setKey(fI, true);
-                        }
-                        return true;
+            arrow_imgs[i].setOnTouchListener((v, ev) -> {
+                if(control.play()) {
+                    int action = ev.getActionMasked();
+                    if(action == ACTION_UP) {
+                        arrow_imgs[fI].setScaleX(1);
+                        arrow_imgs[fI].setScaleY(1);
+                        control.setKey(fI, false);
+                    } else if(action == ACTION_DOWN) {
+                        arrow_imgs[fI].setScaleX(0.9f);
+                        arrow_imgs[fI].setScaleY(0.9f);
+                        control.setKey(fI, true);
                     }
-                    return false;
+                    return true;
                 }
+                return false;
             });
         }
     }
 
     private void clickListen() {
-        View.OnClickListener clickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (v == pause_img) {
-                    pause();
-                } else if (v == back_img) {
-                    control.setPlay(false);
-                    User.get().update(control.stats());
-                    startActivity(_home);
-                } else if (v == play_img) {
-                    start();
-                }
+        View.OnClickListener clickListener = v -> {
+            if (v == pause_img) {
+                pause();
+            } else if (v == back_img) {
+                control.setPlay(false);
+                User.get().update(control.stats());
+                finish();
+            } else if (v == play_img) {
+                start();
             }
         };
         pause_img.setOnClickListener(clickListener);
@@ -151,56 +141,51 @@ public class A_Game extends Droid {
     }
 
     private void seekListen() {
-        Listen.OnProgressChangeListener seek_listener = new Listen.OnProgressChangeListener() {
+        SeekBar.OnSeekBarChangeListener seek_listener = new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChange(SeekBar seekBar, int progress) {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (seekBar == seek_sound) {
-                    prefs.edit().putInt("sound", progress).apply();
+                    prefs.edit().putInt(A_Options.SOUND, progress).apply();
                 } else if (seekBar == seek_music) {
-                    prefs.edit().putInt("music", progress).apply();
+                    prefs.edit().putInt(A_Options.MUSIC, progress).apply();
                 }
             }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         };
         seek_sound.setOnSeekBarChangeListener(seek_listener);
         seek_music.setOnSeekBarChangeListener(seek_listener);
     }
 
     private void varListener() {
-        control.gameOverListen().setOnCallListener(new Listen.OnCallListen() {
-            @Override
-            public void onCall() {
-                control.setPlay(false);
-                final GameStats stats = control.stats();
-                User.get().update(stats);
-                final Runnable r = new Runnable() {
-                    @Override
-                    public void run() {
-                        control.stop();
-                        pause_img.setVisibility(GONE);
-                        settings.setVisibility(GONE);
-                        resume.setVisibility(VISIBLE);
-                        options.setVisibility(VISIBLE);
-                        /* Resume */
-                        score_txt.setText(valueOf(stats.score()));
-                        level_txt.setText(valueOf(stats.lvl()));
-                        coins_txt.setText(valueOf(stats.coins()));
-                        diamonds_txt.setText(valueOf(stats.gems()));
-                        if(vibrator != null) {
-                            vibrate(vibrator,100);
-                        }
-                    }
-                };
-                layout.post(r);
-            }
+        control.gameOverListen().setOnCallListener(() -> {
+            control.setPlay(false);
+            final GameStats stats = control.stats();
+            User.get().update(stats);
+            final Runnable r = () -> {
+                control.stop();
+                pause_img.setVisibility(GONE);
+                settings.setVisibility(GONE);
+                resume.setVisibility(VISIBLE);
+                options.setVisibility(VISIBLE);
+                /* Resume */
+                score_txt.setText(valueOf(stats.score()));
+                level_txt.setText(valueOf(stats.lvl()));
+                coins_txt.setText(valueOf(stats.coins()));
+                diamonds_txt.setText(valueOf(stats.gems()));
+                if(vibrator != null) {
+                    Droid.vibrate(vibrator, 100);
+                }
+            };
+            layout.post(r);
         });
     }
 
     public void start() {
-        if(control.play()) {
-            control.resume();
-        } else {
-            control.start();
-        }
+        if(control.play()) control.resume();
+        else control.start();
         options.setVisibility(GONE);
         pause_img.setVisibility(VISIBLE);
     }
