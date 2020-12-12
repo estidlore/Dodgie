@@ -31,7 +31,7 @@ public class Block extends Obstacle {
         float dx = abs(pX - x) - hW; // - w / 2
         float dy = abs(pY - y) - hW; // - h / 2
         if (dx > pR || dy > pR) return false;
-        // if (dx <= 0 || dy <= 0) return true;
+        if (dx <= 0 || dy <= 0) return true;
         return (dx * dx + dy * dy <= pR * pR);
     }
 

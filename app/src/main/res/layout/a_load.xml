@@ -11,7 +11,7 @@
 
     <ImageView
         android:id="@+id/load_blieve"
-        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintWidth_percent="0.3"
         app:layout_constraintDimensionRatio="2"
         app:srcCompat="@drawable/ic_blieve"
         style="@style/rel" />
@@ -19,7 +19,7 @@
     <ImageView
         android:id="@+id/load_bar"
         app:layout_constraintWidth_percent="0.5"
-        app:layout_constraintHeight_percent="0.04"
+        app:layout_constraintHeight_percent="0.03"
         android:background="#fff"
         style="@style/rel"
         app:layout_constraintVertical_bias="0.9" />
@@ -29,7 +29,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintWidth_percent="0.5"
-        app:layout_constraintHeight_percent="0.04"
+        app:layout_constraintHeight_percent="0.03"
         android:background="#f80"
         app:layout_constraintTop_toTopOf="@+id/load_bar"
         app:layout_constraintStart_toStartOf="@id/load_bar" />

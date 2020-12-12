@@ -77,6 +77,13 @@ public class A_Game extends Droid.BaseActivity {
     }
 
     public void init() {
+        int initLvl = getIntent().getIntExtra(GameStats.INIT_LVL, 1),
+                mode = getIntent().getIntExtra(GameStats.MODE, 0);
+        control.init();
+        GameStats stats = control.stats();
+        stats.setInitLvl(initLvl);
+        stats.setMode(mode);
+
         prefs = getSharedPreferences(A_Options.PREF_CONFIG, MODE_PRIVATE);
         seek_sound.setProgress(prefs.getInt(A_Options.SOUND, 100));
         seek_music.setProgress(prefs.getInt(A_Options.MUSIC, 100));
@@ -84,19 +91,12 @@ public class A_Game extends Droid.BaseActivity {
         if(vibrate) vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         if(control.stats().mode() == 3) {
             arrow_imgs[0].setImageDrawable(ResourcesCompat.getDrawable(getResources(),
-                    R.drawable.change, null));
+                    R.drawable._game_change, null));
         }
         touchListen();
         clickListen();
         seekListen();
-        varListener();
-
-        int initLvl = getIntent().getIntExtra(GameStats.INIT_LVL, 1),
-                mode = getIntent().getIntExtra(GameStats.MODE, 0);
-        control.init();
-        GameStats stats = control.stats();
-        stats.setInitLvl(initLvl);
-        stats.setMode(mode);
+        callListen();
         start();
     }
 
@@ -159,7 +159,7 @@ public class A_Game extends Droid.BaseActivity {
         seek_music.setOnSeekBarChangeListener(seek_listener);
     }
 
-    private void varListener() {
+    private void callListen() {
         control.gameOverListen().setOnCallListener(() -> {
             control.setPlay(false);
             final GameStats stats = control.stats();

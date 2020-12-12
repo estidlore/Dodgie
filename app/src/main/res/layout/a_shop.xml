@@ -11,9 +11,9 @@
 
     <ImageView
         android:id="@+id/shop_back"
-        style="@style/btn"
+        style="@style/img.ui"
         app:layout_constraintHorizontal_bias="0.982"
         app:layout_constraintVertical_bias="0.032"
-        app:srcCompat="@drawable/back" />
+        app:srcCompat="@drawable/ui_back" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

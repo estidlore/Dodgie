@@ -20,6 +20,8 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
+import com.blieve.dodgie.R;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -99,15 +101,19 @@ public class Droid {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
 
         @Override
         protected void onResume() {
             super.onResume();
             hideSystemUI();
-            /*final WindowInsetsController insetsController = getWindow().getInsetsController();
-            final int inset = WindowInsetsCompat.Type.statusBars();
-            insetsController.hide(inset);*/
+        }
+
+        @Override
+        protected void onPause() {
+            super.onPause();
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
 
         private void hideSystemUI() {
@@ -258,6 +264,12 @@ public class Droid {
 
         public interface OnCallListen {
             void onCall();
+        }
+    }
+
+    public static class UI {
+        public static void setPadding(@NotNull View v, int padding) {
+            v.setPadding(padding, padding, padding, padding);
         }
     }
 

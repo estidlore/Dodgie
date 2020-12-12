@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_game"
         android:supportsRtl="true"
-        android:theme="@style/FullscreenTheme">
+        android:theme="@style/AppTheme">
         <!-- MAIN ACTIVITIES -->
         <activity
             android:name=".activity.A_Load"

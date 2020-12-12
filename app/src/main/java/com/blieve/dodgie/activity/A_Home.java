@@ -111,7 +111,7 @@ public class A_Home extends Droid.BaseActivity {
 
     private void setPlayerStyle() {
         Resources res = getResources();
-        Drawable skin = res.getDrawable(R.drawable.circle),
+        Drawable skin = res.getDrawable(R.drawable.player),
                 face = res.getDrawable(User.get().style(0));
         skin.setColorFilter(User.get().style(1), PorterDuff.Mode.MULTIPLY);
         face.setColorFilter(User.get().style(2), PorterDuff.Mode.MULTIPLY);

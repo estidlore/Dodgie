@@ -10,10 +10,10 @@
 
     <ImageView
         android:id="@+id/opts_back"
-        style="@style/btn"
+        style="@style/img.ui"
         app:layout_constraintHorizontal_bias="0.982"
         app:layout_constraintVertical_bias="0.032"
-        app:srcCompat="@drawable/back" />
+        app:srcCompat="@drawable/ui_back" />
 
     <!-- SETTINGS -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,35 +24,35 @@
         app:layout_constraintWidth_percent="0.3">
 
         <ImageView
-            style="@style/options_img"
+            style="@style/img.options"
             app:layout_constraintVertical_bias="0.05"
-            app:srcCompat="@drawable/sound" />
+            app:srcCompat="@drawable/_options_sound" />
 
         <ImageView
-            style="@style/options_img"
+            style="@style/img.options"
             app:layout_constraintVertical_bias="0.35"
-            app:srcCompat="@drawable/music" />
+            app:srcCompat="@drawable/_options_music" />
 
         <ImageView
-            style="@style/options_img"
+            style="@style/img.options"
             app:layout_constraintVertical_bias="0.65"
-            app:srcCompat="@drawable/abc" />
+            app:srcCompat="@drawable/_options_abc" />
 
         <ImageView
-            style="@style/options_img"
+            style="@style/img.options"
             app:layout_constraintVertical_bias="0.95"
-            app:srcCompat="@drawable/vibration" />
+            app:srcCompat="@drawable/_options_vibration" />
 
         <SeekBar
             android:id="@+id/opts_seek_sound"
             style="@style/seek.options"
-            android:thumb="@drawable/seek_thumb"
+            android:thumb="@drawable/ui_seek_thumb"
             app:layout_constraintVertical_bias="0.05" />
 
         <SeekBar
             android:id="@+id/opts_seek_music"
             style="@style/seek.options"
-            android:thumb="@drawable/seek_thumb"
+            android:thumb="@drawable/ui_seek_thumb"
             app:layout_constraintVertical_bias="0.35" />
 
         <Spinner
@@ -95,7 +95,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/opts_pop"
         style="@style/rel"
-        android:background="@drawable/round_panel"
+        android:background="@drawable/ui_panel"
         android:visibility="gone"
         app:layout_constraintWidth_percent="0.7"
         app:layout_constraintHeight_percent="0.7">
@@ -107,10 +107,10 @@
 
     <ImageView
         android:id="@+id/opts_close"
-        style="@style/btn"
+        style="@style/img.ui"
         app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintVertical_bias="0.15"
         android:visibility="gone"
-        app:srcCompat="@drawable/close"/>
+        app:srcCompat="@drawable/ui_close"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

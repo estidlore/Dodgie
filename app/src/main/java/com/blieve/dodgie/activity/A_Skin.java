@@ -1,9 +1,9 @@
 package com.blieve.dodgie.activity;
 
-import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,14 +25,14 @@ public class A_Skin extends Droid.BaseActivity {
     private final static int[][] styles = {
             // FACES
             {
-                    R.drawable.face_happy,
-                    R.drawable.face_poker,
-                    R.drawable.face_sad,
-                    R.drawable.face_cyclops,
-                    R.drawable.face_pirate,
-                    R.drawable.face_angel,
-                    R.drawable.face_devil,
-                    R.drawable.face_marshmello
+                    R.drawable.player_happy,
+                    R.drawable.player_poker,
+                    R.drawable.player_sad,
+                    R.drawable.player_cyclops,
+                    R.drawable.player_pirate,
+                    R.drawable.player_angel,
+                    R.drawable.player_devil,
+                    R.drawable.player_marshmello
             },
             // BLOCK FACES
             {
@@ -51,6 +51,7 @@ public class A_Skin extends Droid.BaseActivity {
             // COLORS
             {
                     // primary
+                    0x00000000,
                     0xFFFFFFFF,
                     0xFF000000,
 
@@ -200,8 +201,8 @@ public class A_Skin extends Droid.BaseActivity {
 
     private LinearLayout skin_styles;
     private LinearLayout[] style_lyts;
-    private ImageView back_img, skin_img, block_img;
-    private ImageView[] section_imgs, style_imgs;
+    private ImageView back_img;
+    private ImageView[] section_imgs, preview_imgs;
     private int style, section;
 
     @Override
@@ -211,9 +212,9 @@ public class A_Skin extends Droid.BaseActivity {
 
         back_img = findViewById(R.id.skin_back);
         skin_styles = findViewById(R.id.skin_styles);
-        style_imgs = new ImageView[]{
-                findViewById(R.id.skin_skin_img),
-                findViewById(R.id.skin_block_img)
+        preview_imgs = new ImageView[]{
+                findViewById(R.id.skin_player_preview),
+                findViewById(R.id.skin_block_preview)
         };
         section_imgs = new ImageView[]{
                 findViewById(R.id.skin_style_img),
@@ -225,14 +226,15 @@ public class A_Skin extends Droid.BaseActivity {
                 findViewById(R.id.skin_blocks),
                 findViewById(R.id.skin_colors)
         };
-        skin_img = findViewById(R.id.skin_skin_preview);
-        block_img = findViewById(R.id.skin_block_preview);
         init();
     }
 
     private void init() {
         style = -1;
         section = -1;
+        for(ImageView i : preview_imgs) {
+            Droid.UI.setPadding(i, Droid.height(2));
+        }
         setStyle(0);
         setSection(0);
         clickListen();
@@ -262,7 +264,7 @@ public class A_Skin extends Droid.BaseActivity {
                 ImageView img = new ImageView(this);
                 img.setLayoutParams(paramsImg);
                 img.setPadding(padding, padding, padding, padding);
-                Drawable d = res.getDrawable(i == 1 ? R.drawable.block : R.drawable.circle);
+                Drawable d = res.getDrawable(i == 1 ? R.drawable.block : R.drawable.player);
                 if(i == 2) {
                     d.setColorFilter(styles[2][count], MULTIPLY);
                     img.setImageBitmap(Droid.Img.drawToBmp(d, size, size));
@@ -299,20 +301,22 @@ public class A_Skin extends Droid.BaseActivity {
         Resources res = getResources();
         User user = User.get();
         int prevSize = Droid.width(7);
-        Drawable skin = res.getDrawable(R.drawable.circle),
+        // player
+        Drawable skin = res.getDrawable(R.drawable.player),
                 face = res.getDrawable(user.style(0));
         skin.setColorFilter(user.style(1), MULTIPLY);
         face.setColorFilter(user.style(2), MULTIPLY);
-        skin_img.setImageBitmap(Droid.Img.bmpMerge(
+        preview_imgs[0].setImageBitmap(Droid.Img.bmpMerge(
                 Droid.Img.drawToBmp(skin, prevSize, prevSize),
                 Droid.Img.drawToBmp(face, prevSize, prevSize)
         ));
+        // block
         Drawable block = res.getDrawable(R.drawable.block),
                 blockFace = res.getDrawable(user.style(3));
         block.setColorFilter(user.style(4), MULTIPLY);
         blockFace.setColorFilter(user.style(5), MULTIPLY);
 
-        block_img.setImageBitmap(Droid.Img.bmpMerge(
+        preview_imgs[1].setImageBitmap(Droid.Img.bmpMerge(
                 Droid.Img.drawToBmp(block, prevSize, prevSize),
                 Droid.Img.drawToBmp(blockFace, prevSize, prevSize)
         ));
@@ -321,8 +325,8 @@ public class A_Skin extends Droid.BaseActivity {
     private void setStyle(int style) {
         if(this.style == style) return;
         this.style = style;
-        for(int i = style_imgs.length - 1; i >= 0; i--) {
-            style_imgs[i].setBackgroundColor(i == style ? 0x44000000 : 0);
+        for(int i = preview_imgs.length - 1; i >= 0; i--) {
+            preview_imgs[i].setBackgroundColor(i == style ? 0x44000000 : 0);
         }
         if(section == 0) showSection();
     }
@@ -350,8 +354,8 @@ public class A_Skin extends Droid.BaseActivity {
                 finish();
                 return;
             }
-            for(int i = style_imgs.length - 1; i >= 0; i--) {
-                if(v == style_imgs[i]) {
+            for(int i = preview_imgs.length - 1; i >= 0; i--) {
+                if(v == preview_imgs[i]) {
                     setStyle(i);
                     return;
                 }
@@ -364,8 +368,8 @@ public class A_Skin extends Droid.BaseActivity {
             }
         };
         back_img.setOnClickListener(clickListener);
-        for(int i = style_imgs.length - 1; i >= 0; i--) {
-            style_imgs[i].setOnClickListener(clickListener);
+        for(int i = preview_imgs.length - 1; i >= 0; i--) {
+            preview_imgs[i].setOnClickListener(clickListener);
         }
         for(int i = section_imgs.length - 1; i >= 0; i--) {
             section_imgs[i].setOnClickListener(clickListener);

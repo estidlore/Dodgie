@@ -30,6 +30,14 @@ public class User {
 
     public String alias;
     public int coins, gems, lpts;
+    /*
+    * 0: player skin
+    * 1: player color 1
+    * 2: player color 2
+    * 3: block skin
+    * 4: block color 1
+    * 5: block color 2
+    * */
     private int[] styles;
 
     private final ArrayList<Integer> highScores, highLvls;
@@ -38,6 +46,7 @@ public class User {
     private User() {
         highScores = new ArrayList<>();
         highLvls = new ArrayList<>();
+        styles = new int[6];
     }
 
     public void init(SharedPreferences prefs) {
@@ -54,9 +63,9 @@ public class User {
         coins = prefs.getInt(COINS, 0);
         gems = prefs.getInt(GEMS, 0);
         lpts = prefs.getInt(LEAGUE_POINTS,0);
-        styles = new int[6];
         for(int i = styles.length - 1; i >= 0; i--) {
-            styles[i] = prefs.getInt(STYLE + i,0);
+            // if is color 2 of player or block, the default style is 2, else is 1
+            styles[i] = prefs.getInt(STYLE + i, i % 3 == 2 ? 2 : 1);
         }
     }
 
@@ -80,6 +89,7 @@ public class User {
     }
 
     public int style(int i) {
+        // if is skin of player or block, style is 0 or 1, else is 2 (color)
         return A_Skin.style(i % 3 == 0 ? (i / 3) : 2, styles[i]);
     }
 

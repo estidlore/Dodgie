@@ -12,7 +12,6 @@ import android.view.View;
 import com.blieve.dodgie.R;
 import com.blieve.dodgie.model.Block;
 import com.blieve.dodgie.model.GameStats;
-import com.blieve.dodgie.model.Obstacle;
 import com.blieve.dodgie.model.Player;
 import com.blieve.dodgie.model.User;
 import com.blieve.dodgie.util.Droid;
@@ -89,7 +88,7 @@ public class ControlGame extends View {
                 size = Block.width();
         // User drawable
         User user = User.get();
-        Drawable skin = res.getDrawable(R.drawable.circle),
+        Drawable skin = res.getDrawable(R.drawable.player),
                 face = res.getDrawable(user.style(0));
         skin.setColorFilter(user.style(1), MULTIPLY);
         face.setColorFilter(user.style(2), MULTIPLY);
@@ -258,15 +257,11 @@ public class ControlGame extends View {
 
     public final void setKey(int key, boolean pressed) {
         if(stats.mode() == 3 && key == 0) {
-            if(!pressed) {
-                return;
-            }
+            if(!pressed) return;
             keys[key] = !keys[key];
         } else if(pressed != keys[key]) {
             keys[key] = pressed;
-        } else {
-            return;
-        }
+        } else return;
         aX = keys[1] ? -1 : (keys[2] ? 1 : 0);
         aY = keys[0] ? -1 : 1;
     }

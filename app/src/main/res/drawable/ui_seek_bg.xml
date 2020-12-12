@@ -1,7 +1,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:drawable="@drawable/gray_bar"/>
+    <item android:drawable="@drawable/ui_gray_bar"/>
     <item>
-        <scale android:drawable="@drawable/white_bar"
+        <scale android:drawable="@drawable/ui_seek_bar"
             android:scaleWidth="100%" />
     </item>
 </layer-list>

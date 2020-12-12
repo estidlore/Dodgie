@@ -5,95 +5,74 @@
     android:id="@+id/skin_lyt"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#335577"
+    android:background="#000000"
     tools:context=".activity.A_Skin"
     tools:ignore="MissingConstraints" >
 
     <ImageView
         android:id="@+id/skin_back"
-        style="@style/btn"
-        app:srcCompat="@drawable/back"
+        style="@style/img.ui"
+        app:srcCompat="@drawable/ui_back"
         app:layout_constraintHorizontal_bias="0.982"
         app:layout_constraintVertical_bias="0.032"
         tools:ignore="MissingConstraints" />
 
-    <!-- WINDOWS -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/skin_windows"
-        style="@style/rel"
-        android:background="@drawable/gray_bg"
-        app:layout_constraintDimensionRatio="1.8"
-        app:layout_constraintHeight_percent="0.12"
-        app:layout_constraintHorizontal_bias="0.018"
-        app:layout_constraintVertical_bias="0.032">
-
-        <ImageView
-            android:id="@+id/skin_skin_img"
-            style="@style/skin_img"
-            app:srcCompat="@drawable/circle1"
-            app:layout_constraintHorizontal_bias="0.15" />
-
-        <ImageView
-            android:id="@+id/skin_block_img"
-            style="@style/skin_img"
-            app:srcCompat="@drawable/block1"
-            app:layout_constraintHorizontal_bias="0.85" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
     <!-- SUB-SKIN -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/skin_subskin"
         style="@style/rel"
-        android:background="@drawable/gray_bg"
+        android:background="@drawable/ui_gray_bg"
         app:layout_constraintDimensionRatio="2.5"
         app:layout_constraintHeight_percent="0.10"
-        app:layout_constraintHorizontal_bias="0.018"
-        app:layout_constraintVertical_bias="0.172">
+        app:layout_constraintHorizontal_bias="0.036"
+        app:layout_constraintVertical_bias="0.064">
 
         <ImageView
             android:id="@+id/skin_style_img"
-            style="@style/skin_img"
-            app:srcCompat="@drawable/style"
+            style="@style/img.skin"
+            app:srcCompat="@drawable/_skin_style"
             app:layout_constraintHorizontal_bias="0.1" />
 
         <ImageView
             android:id="@+id/skin_one_img"
-            style="@style/skin_img"
-            app:srcCompat="@drawable/one" />
+            style="@style/img.skin"
+            app:srcCompat="@drawable/_skin_one" />
 
         <ImageView
             android:id="@+id/skin_two_img"
-            style="@style/skin_img"
-            app:srcCompat="@drawable/two"
+            style="@style/img.skin"
+            app:srcCompat="@drawable/_skin_two"
             app:layout_constraintHorizontal_bias="0.9" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- PREVIEWS -->
-    <ImageView
-        android:id="@+id/skin_skin_preview"
+    <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/rel"
-        app:srcCompat="@drawable/circle"
-        app:layout_constraintDimensionRatio="1"
-        app:layout_constraintHorizontal_bias="0.42"
-        app:layout_constraintVertical_bias="0.2"
-        app:layout_constraintWidth_percent="0.07" />
+        android:background="@drawable/ui_gray_bg"
+        app:layout_constraintDimensionRatio="1.8"
+        app:layout_constraintHeight_percent="0.25"
+        app:layout_constraintVertical_bias="0.1">
+        <ImageView
+            android:id="@+id/skin_player_preview"
+            style="@style/img.skin"
+            app:srcCompat="@drawable/player"
+            app:layout_constraintHorizontal_bias="0.15" />
 
-    <ImageView
-        android:id="@+id/skin_block_preview"
-        style="@style/rel"
-        app:srcCompat="@drawable/block"
-        app:layout_constraintDimensionRatio="1"
-        app:layout_constraintHorizontal_bias="0.58"
-        app:layout_constraintVertical_bias="0.2"
-        app:layout_constraintWidth_percent="0.07" />
+        <ImageView
+            android:id="@+id/skin_block_preview"
+            style="@style/img.skin"
+            app:srcCompat="@drawable/block"
+            app:layout_constraintHorizontal_bias="0.85" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <!-- STYLES -->
     <ScrollView
         style="@style/rel"
-        android:background="@drawable/gray_bg"
+        android:background="@drawable/ui_gray_bg"
         app:layout_constraintHeight_percent="0.4"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.7"
-        app:layout_constraintWidth_percent="0.7">
+        app:layout_constraintVertical_bias="0.75"
+        app:layout_constraintWidth_percent="0.75">
         <LinearLayout
             android:id="@+id/skin_styles"
             android:layout_width="match_parent"

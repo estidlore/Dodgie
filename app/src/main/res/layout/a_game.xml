@@ -15,8 +15,8 @@
 
     <ImageView
         android:id="@+id/game_img_pause"
-        style="@style/btn"
-        app:srcCompat="@drawable/pause"
+        style="@style/img.ui"
+        app:srcCompat="@drawable/_game_pause"
         app:layout_constraintHorizontal_bias="0.982"
         app:layout_constraintVertical_bias="0.032" />
 
@@ -26,24 +26,24 @@
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintWidth_percent="0.13"
-        app:srcCompat="@drawable/up"
+        app:srcCompat="@drawable/_game_up"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/game_img_left"
-        style="@style/btn"
+        style="@style/img.ui"
         app:layout_constraintWidth_percent="0.13"
-        app:srcCompat="@drawable/left"
+        app:srcCompat="@drawable/_game_left"
         app:layout_constraintHorizontal_bias="0.82"
         app:layout_constraintVertical_bias="1"
         tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/game_img_right"
-        style="@style/btn"
+        style="@style/img.ui"
         app:layout_constraintWidth_percent="0.13"
-        app:srcCompat="@drawable/right"
+        app:srcCompat="@drawable/_game_right"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintVertical_bias="1" />
 
@@ -52,7 +52,7 @@
         style="@style/rel"
         app:layout_constraintWidth_percent="0.4"
         app:layout_constraintDimensionRatio="1.5"
-        android:background="@drawable/round_panel">
+        android:background="@drawable/ui_panel">
 
         <!-- GAME SETTINGS -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,19 +62,19 @@
             app:layout_constraintHeight_percent="0.35"
             app:layout_constraintVertical_bias="0.3">
             <ImageView
-                style="@style/game_img"
+                style="@style/img_game"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:srcCompat="@drawable/sound" />
+                app:srcCompat="@drawable/_options_sound" />
             <SeekBar
                 android:id="@+id/game_seek_sound"
                 app:layout_constraintVertical_bias="0"
                 style="@style/seek.game" />
             <ImageView
-                style="@style/game_img"
+                style="@style/img_game"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:srcCompat="@drawable/music" />
+                app:srcCompat="@drawable/_options_music" />
             <SeekBar
                 android:id="@+id/game_seek_music"
                 app:layout_constraintVertical_bias="1"
@@ -91,15 +91,15 @@
 
             <ImageView
                 android:id="@+id/game_img_score"
-                style="@style/game_img"
-                app:srcCompat="@drawable/points"
+                style="@style/img_game"
+                app:srcCompat="@drawable/_game_points"
                 app:layout_constraintEnd_toStartOf="@+id/game_txt_score"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/game_txt_score"
-                style="@style/game_txt"
+                style="@style/txt"
                 android:text="0"
                 app:layout_constraintEnd_toStartOf="@+id/game_img_lvl"
                 app:layout_constraintStart_toEndOf="@+id/game_img_score"
@@ -107,15 +107,15 @@
 
             <ImageView
                 android:id="@+id/game_img_lvl"
-                style="@style/game_img"
-                app:srcCompat="@drawable/lvl"
+                style="@style/img_game"
+                app:srcCompat="@drawable/_game_lvl"
                 app:layout_constraintEnd_toStartOf="@+id/game_txt_lvl"
                 app:layout_constraintStart_toEndOf="@+id/game_txt_score"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/game_txt_lvl"
-                style="@style/game_txt"
+                style="@style/txt"
                 android:text="0"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/game_img_lvl"
@@ -123,15 +123,15 @@
 
             <ImageView
                 android:id="@+id/game_img_coins"
-                style="@style/game_img"
-                app:srcCompat="@drawable/coin"
+                style="@style/img_game"
+                app:srcCompat="@drawable/ui_coin"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/game_txt_coins"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/game_txt_coins"
-                style="@style/game_txt"
+                style="@style/txt"
                 android:text="0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/game_img_diamond"
@@ -139,15 +139,15 @@
 
             <ImageView
                 android:id="@+id/game_img_diamond"
-                style="@style/game_img"
-                app:srcCompat="@drawable/diamond"
+                style="@style/img_game"
+                app:srcCompat="@drawable/ui_diamond"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/game_txt_diamonds"
                 app:layout_constraintStart_toEndOf="@+id/game_txt_coins" />
 
             <TextView
                 android:id="@+id/game_txt_diamonds"
-                style="@style/game_txt"
+                style="@style/txt"
                 android:text="0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -161,7 +161,7 @@
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintHorizontal_bias="0.4"
             app:layout_constraintVertical_bias="0.8"
-            app:srcCompat="@drawable/play" />
+            app:srcCompat="@drawable/ui_play" />
         <ImageView
             android:id="@+id/game_img_back"
             style="@style/rel"
@@ -169,7 +169,7 @@
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintVertical_bias="0.8"
-            app:srcCompat="@drawable/back" />
+            app:srcCompat="@drawable/ui_back" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
