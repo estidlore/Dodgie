@@ -5,34 +5,138 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:ignore="MissingConstraints"
     tools:context=".fragment.F_Mode">
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/rel"
         app:layout_constraintWidth_percent="0.4"
         app:layout_constraintHeight_percent="0.8"
         app:layout_constraintHorizontal_bias="0.1">
-    </LinearLayout>
-    <LinearLayout
+        <ImageView
+            android:id="@+id/mode_img_score"
+            style="@style/img_mode"
+            app:srcCompat="@drawable/_game_points"
+            app:layout_constraintEnd_toStartOf="@+id/mode_txt_score"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/mode_txt_score"
+            style="@style/txt.wrap"
+            android:text="0"
+            app:layout_constraintEnd_toStartOf="@+id/mode_img_lvl"
+            app:layout_constraintStart_toEndOf="@+id/mode_img_score"
+            app:layout_constraintTop_toTopOf="@+id/mode_img_score"
+            app:layout_constraintBottom_toBottomOf="@id/mode_img_score" />
+
+        <ImageView
+            android:id="@+id/mode_img_lvl"
+            style="@style/img_mode"
+            app:srcCompat="@drawable/_game_lvl"
+            app:layout_constraintEnd_toStartOf="@+id/mode_txt_lvl"
+            app:layout_constraintStart_toEndOf="@+id/mode_txt_score"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/mode_txt_lvl"
+            style="@style/txt.wrap"
+            android:text="0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/mode_img_lvl"
+            app:layout_constraintTop_toTopOf="@+id/mode_img_lvl"
+            app:layout_constraintBottom_toBottomOf="@+id/mode_img_lvl"/>
+
+        <ImageView
+            android:id="@+id/mode_img_minus_lvl"
+            style="@style/img_mode"
+            app:srcCompat="@drawable/ui_minus"
+            app:layout_constraintVertical_bias="0.4"
+            app:layout_constraintHorizontal_bias="0.15"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/mode_img_plus_lvl"
+            style="@style/img_mode"
+            app:srcCompat="@drawable/ui_plus"
+            app:layout_constraintVertical_bias="0.4"
+            app:layout_constraintHorizontal_bias="0.85"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/mode_txt_init_lvl"
+            style="@style/txt.constraint.wrap"
+            android:text="Initial level"
+            android:textAlignment="center"
+            app:layout_constraintVertical_bias="0.25"/>
+
+        <TextView
+            android:id="@+id/mode_txt_init_lvl_value"
+            style="@style/txt.constraint.wrap"
+            android:text="1"
+            android:textAlignment="center"
+            app:layout_constraintVertical_bias="0.4"/>
+
+        <ImageView
+            android:id="@+id/mode_img_coins"
+            style="@style/img_mode"
+            app:srcCompat="@drawable/ui_coin"
+            app:layout_constraintVertical_bias="0.65"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/mode_txt_coins"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/mode_txt_coins"
+            style="@style/txt.wrap"
+            android:text="0"
+            app:layout_constraintTop_toTopOf="@id/mode_img_coins"
+            app:layout_constraintBottom_toBottomOf="@id/mode_img_coins"
+            app:layout_constraintEnd_toStartOf="@+id/mode_img_diamond"
+            app:layout_constraintStart_toEndOf="@+id/mode_img_coins" />
+
+        <ImageView
+            android:id="@+id/mode_img_diamond"
+            style="@style/img_mode"
+            app:srcCompat="@drawable/ui_diamond"
+            app:layout_constraintTop_toTopOf="@id/mode_img_coins"
+            app:layout_constraintBottom_toBottomOf="@id/mode_img_coins"
+            app:layout_constraintEnd_toStartOf="@+id/mode_txt_diamonds"
+            app:layout_constraintStart_toEndOf="@+id/mode_txt_coins" />
+
+        <TextView
+            android:id="@+id/mode_txt_diamonds"
+            style="@style/txt.wrap"
+            android:text="0"
+            app:layout_constraintTop_toTopOf="@id/mode_img_diamond"
+            app:layout_constraintBottom_toBottomOf="@id/mode_img_diamond"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/mode_img_diamond" />
+
+        <ImageView
+            android:id="@+id/mode_img_play"
+            style="@style/img.ui"
+            app:srcCompat="@drawable/ui_play"
+            app:layout_constraintWidth_percent="0.15"
+            app:layout_constraintVertical_bias="1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <ListView
+        android:id="@+id/mode_list"
         style="@style/rel"
+        android:choiceMode="singleChoice"
         app:layout_constraintWidth_percent="0.4"
         app:layout_constraintHeight_percent="0.8"
-        app:layout_constraintHorizontal_bias="0.9"
-        android:orientation="vertical">
-        <TextView
+        app:layout_constraintHorizontal_bias="0.9">
+    </ListView>
+    <!-- <TextView
             android:id="@+id/mode_txt_clasic"
             style="@style/text_list"
-            android:text="Clasic" />
-        <TextView
-            android:id="@+id/mode_txt_party"
-            style="@style/text_list"
-            android:text="Vertical" />
-        <TextView
-            android:id="@+id/mode_txt_overturned"
-            style="@style/text_list"
-            android:text="¡Party!" />
-        <TextView
-            android:id="@+id/mode_txt_gravity"
-            style="@style/text_list"
-            android:text="Overturned" />
-    </LinearLayout>
+            android:text="Vertical" /> -->
 </androidx.constraintlayout.widget.ConstraintLayout>

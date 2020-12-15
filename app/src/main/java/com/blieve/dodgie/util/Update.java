@@ -11,7 +11,7 @@ import static java.lang.Thread.sleep;
 public abstract class Update implements Runnable {
 
     private Thread thread;
-    private boolean play;
+    private boolean running;
     private int MS_PER_TICK;
 
     /**
@@ -22,13 +22,13 @@ public abstract class Update implements Runnable {
      */
     public Update(int tps) {
         setTPS(tps);
-        play = false;
+        running = false;
     }
 
     @Override
     public final void run() {
         long time, dt;
-        while (play) {
+        while (running) {
             time = nanoTime();
             tick();
             dt = (nanoTime() - time) / 1000000;
@@ -48,29 +48,40 @@ public abstract class Update implements Runnable {
     /**
      * Start a new thread
      */
-    public final void start() {
-        if (!play && thread == null) {
-            play = true;
-            thread = new Thread(this, "update");
+    public final void start(String name) {
+        if (thread == null) {
+            running = true;
+            thread = new Thread(this, name);
             thread.start();
         }
+    }
+
+    public final void start() {
+        start(getClass().getSimpleName());
     }
 
     /**
      * Stop the thread
      */
     public final void stop() {
-        if (thread == null) {
-            return;
-        }
-        play = false;
-        while(true){
-            try{
+        if (thread == null) return;
+        running = false;
+        while (thread != null) {
+            try {
                 thread.join(/*5000*/);
-                break;
-            } catch (Exception ignored) { }
+                thread = null;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        thread = null;
+
+    }
+
+    /**
+     *  Returns whether the thread is running or not
+     **/
+    public final boolean isRunning() {
+        return running;
     }
 
     /**

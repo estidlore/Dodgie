@@ -99,11 +99,12 @@
 
             <TextView
                 android:id="@+id/game_txt_score"
-                style="@style/txt"
+                style="@style/txt.wrap"
                 android:text="0"
                 app:layout_constraintEnd_toStartOf="@+id/game_img_lvl"
                 app:layout_constraintStart_toEndOf="@+id/game_img_score"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/game_img_score"/>
 
             <ImageView
                 android:id="@+id/game_img_lvl"
@@ -115,11 +116,12 @@
 
             <TextView
                 android:id="@+id/game_txt_lvl"
-                style="@style/txt"
+                style="@style/txt.wrap"
                 android:text="0"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/game_img_lvl"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/game_img_lvl"/>
 
             <ImageView
                 android:id="@+id/game_img_coins"
@@ -131,8 +133,9 @@
 
             <TextView
                 android:id="@+id/game_txt_coins"
-                style="@style/txt"
+                style="@style/txt.wrap"
                 android:text="0"
+                app:layout_constraintTop_toTopOf="@id/game_img_coins"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/game_img_diamond"
                 app:layout_constraintStart_toEndOf="@+id/game_img_coins" />
@@ -147,11 +150,13 @@
 
             <TextView
                 android:id="@+id/game_txt_diamonds"
-                style="@style/txt"
+                style="@style/txt.wrap"
                 android:text="0"
+                app:layout_constraintTop_toTopOf="@id/game_img_diamond"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/game_img_diamond" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView

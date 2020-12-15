@@ -40,7 +40,7 @@
             android:screenOrientation="landscape" />
         <!-- SUB MENUS -->
         <activity
-            android:name=".activity.A_Skin"
+            android:name=".activity.A_Style"
             android:configChanges="orientation"
             android:screenOrientation="landscape" />
         <activity

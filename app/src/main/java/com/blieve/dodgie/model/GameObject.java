@@ -2,8 +2,6 @@ package com.blieve.dodgie.model;
 
 import androidx.annotation.CallSuper;
 
-import com.blieve.dodgie.controller.ControlGame;
-
 import static com.blieve.dodgie.controller.ControlGame.CELL_W;
 import static java.lang.Math.abs;
 

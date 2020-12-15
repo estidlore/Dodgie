@@ -48,6 +48,8 @@ public class A_Home extends Droid.BaseActivity {
         setPlayerStyle();
         control.setBlockStyle();
         control.start();
+        txtCoins.setText(String.valueOf(User.get().coins));
+        txtGems.setText(String.valueOf(User.get().gems));
     }
 
     @Override
@@ -58,13 +60,10 @@ public class A_Home extends Droid.BaseActivity {
     }
 
     private void init() {
-        txtCoins.setText(String.valueOf(User.get().coins));
-        txtGems.setText(String.valueOf(User.get().gems));
-
         _info = new Intent(A_Home.this, A_Info.class);
         _leaderBoard = new Intent(A_Home.this, A_Leaderboard.class);
         _options = new Intent(A_Home.this, A_Options.class);
-        _skin = new Intent(A_Home.this, A_Skin.class);
+        _skin = new Intent(A_Home.this, A_Style.class);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.home_pop_frg, new F_Mode()).commit();
 

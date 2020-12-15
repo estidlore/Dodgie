@@ -13,16 +13,12 @@ import android.widget.EditText;
 import com.blieve.dodgie.R;
 import com.blieve.dodgie.activity.A_Options;
 import com.blieve.dodgie.util.Droid;
-import com.google.firebase.auth.FirebaseAuth;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class F_SignIn extends Fragment {
 
     private EditText inp_alias, inp_pass;
     private Button btn_signIn;
-    FirebaseAuth auth;
+    // FirebaseAuth auth;
 
     private Droid.Lang lang;
     private final String invalidAlias = "invalidAlias",
@@ -30,7 +26,7 @@ public class F_SignIn extends Fragment {
             requiredField = "required";
 
     @Override
-    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.f_sign_in, container, false);
 
@@ -44,7 +40,7 @@ public class F_SignIn extends Fragment {
 
     private void init() {
         initLang();
-        auth = FirebaseAuth.getInstance();
+        // auth = FirebaseAuth.getInstance();
         clickListen();
     }
 
@@ -69,7 +65,7 @@ public class F_SignIn extends Fragment {
         return completed[0];
     }
 
-    private boolean validate(@NotNull String alias, String pass) {
+    private boolean validate(String alias, String pass) {
         if(alias.length() > 12) {
             inp_alias.setError(lang.getText(invalidAlias));
             inp_alias.requestFocus();
@@ -84,8 +80,7 @@ public class F_SignIn extends Fragment {
         return true;
     }
 
-    @Nullable
-    private String require(@NotNull EditText txt) {
+    private String require(EditText txt) {
         String val = txt.getText().toString().trim();
         if(val.isEmpty()) {
             txt.setError(requiredField);

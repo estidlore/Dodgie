@@ -26,10 +26,6 @@ public class GameStats {
         return gems;
     }
 
-    public void setInitLvl(int val) {
-        initLvl = val;
-    }
-
     public int lvl() {
         return lvl;
     }
@@ -38,16 +34,24 @@ public class GameStats {
         return mode;
     }
 
-    public void setMode(int val) {
-        mode = val;
-    }
-
     public int points() {
         return points;
     }
 
     public int score() {
         return score;
+    }
+
+    public int initLvl() {
+        return initLvl;
+    }
+
+    public void setInitLvl(int val) {
+        initLvl = val;
+    }
+
+    public void setMode(int val) {
+        mode = val;
     }
 
     public void addCoins(int val) {

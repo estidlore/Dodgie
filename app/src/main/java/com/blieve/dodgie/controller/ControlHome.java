@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.blieve.dodgie.R;
@@ -14,8 +13,6 @@ import com.blieve.dodgie.model.Block;
 import com.blieve.dodgie.model.User;
 import com.blieve.dodgie.util.Droid;
 import com.blieve.dodgie.util.Update;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -77,7 +74,7 @@ public class ControlHome extends View {
     }
 
     @Override
-    public void onDraw(@NotNull Canvas cvs) {
+    public void onDraw(Canvas cvs) {
         cvs.drawColor(BLACK);
         cvs.translate(originX, originY);
         Block b;

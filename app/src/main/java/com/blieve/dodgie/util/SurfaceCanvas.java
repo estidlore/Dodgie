@@ -8,8 +8,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import org.jetbrains.annotations.NotNull;
-
 import static com.blieve.dodgie.util.Droid.SCREEN_H;
 import static com.blieve.dodgie.util.Droid.SCREEN_W;
 import static java.lang.System.nanoTime;
@@ -61,7 +59,7 @@ public abstract class SurfaceCanvas extends SurfaceView
     }
 
     @Override
-    public void surfaceDestroyed(@NotNull SurfaceHolder holder){
+    public void surfaceDestroyed(SurfaceHolder holder){
         stop();
         holder.getSurface().release();
         this.holder = null;

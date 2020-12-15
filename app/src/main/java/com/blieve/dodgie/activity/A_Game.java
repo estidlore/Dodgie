@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -17,12 +18,6 @@ import com.blieve.dodgie.controller.ControlGame;
 import com.blieve.dodgie.model.GameStats;
 import com.blieve.dodgie.model.User;
 import com.blieve.dodgie.util.Droid;
-
-import static android.view.MotionEvent.ACTION_DOWN;
-import static android.view.MotionEvent.ACTION_UP;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static java.lang.String.valueOf;
 
 public class A_Game extends Droid.BaseActivity {
 
@@ -69,20 +64,18 @@ public class A_Game extends Droid.BaseActivity {
     private void pause() {
         if(control.play()) {
             control.stop();
-            pause_img.setVisibility(GONE);
-            resume.setVisibility(GONE);
-            settings.setVisibility(VISIBLE);
-            options.setVisibility(VISIBLE);
+            pause_img.setVisibility(View.GONE);
+            resume.setVisibility(View.GONE);
+            settings.setVisibility(View.VISIBLE);
+            options.setVisibility(View.VISIBLE);
         }
     }
 
     public void init() {
-        int initLvl = getIntent().getIntExtra(GameStats.INIT_LVL, 1),
-                mode = getIntent().getIntExtra(GameStats.MODE, 0);
         control.init();
         GameStats stats = control.stats();
-        stats.setInitLvl(initLvl);
-        stats.setMode(mode);
+        stats.setInitLvl(getIntent().getIntExtra(GameStats.INIT_LVL, 1));
+        stats.setMode(getIntent().getIntExtra(GameStats.MODE, 0));
 
         prefs = getSharedPreferences(A_Options.PREF_CONFIG, MODE_PRIVATE);
         seek_sound.setProgress(prefs.getInt(A_Options.SOUND, 100));
@@ -97,7 +90,7 @@ public class A_Game extends Droid.BaseActivity {
         clickListen();
         seekListen();
         callListen();
-        start();
+        play();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -107,11 +100,11 @@ public class A_Game extends Droid.BaseActivity {
             arrow_imgs[i].setOnTouchListener((v, ev) -> {
                 if(control.play()) {
                     int action = ev.getActionMasked();
-                    if(action == ACTION_UP) {
+                    if(action == MotionEvent.ACTION_UP) {
                         arrow_imgs[fI].setScaleX(1);
                         arrow_imgs[fI].setScaleY(1);
                         control.setKey(fI, false);
-                    } else if(action == ACTION_DOWN) {
+                    } else if(action == MotionEvent.ACTION_DOWN) {
                         arrow_imgs[fI].setScaleX(0.9f);
                         arrow_imgs[fI].setScaleY(0.9f);
                         control.setKey(fI, true);
@@ -128,11 +121,20 @@ public class A_Game extends Droid.BaseActivity {
             if (v == pause_img) {
                 pause();
             } else if (v == back_img) {
-                control.setPlay(false);
-                User.get().update(control.stats());
+                if(control.play()) User.get().update(control.stats());
                 finish();
             } else if (v == play_img) {
-                start();
+                if(!control.play()) {
+                    GameStats stats = control.stats();
+                    int initLvl = stats.initLvl(), costCoins, costDiamonds;
+                    do {
+                        initLvl--;
+                        costCoins = initLvl * GameStats.PTS_PER_LVL;
+                        costDiamonds = initLvl;
+                    } while (!User.get().subtractCost(costCoins, costDiamonds));
+                    stats.setInitLvl(initLvl + 1);
+                }
+                play();
             }
         };
         pause_img.setOnClickListener(clickListener);
@@ -161,33 +163,29 @@ public class A_Game extends Droid.BaseActivity {
 
     private void callListen() {
         control.gameOverListen().setOnCallListener(() -> {
-            control.setPlay(false);
-            final GameStats stats = control.stats();
-            User.get().update(stats);
-            final Runnable r = () -> {
+            runOnUiThread(() -> {
                 control.stop();
-                pause_img.setVisibility(GONE);
-                settings.setVisibility(GONE);
-                resume.setVisibility(VISIBLE);
-                options.setVisibility(VISIBLE);
+                if(vibrator != null) Droid.vibrate(vibrator, 100);
+                pause_img.setVisibility(View.GONE);
+                settings.setVisibility(View.GONE);
+                resume.setVisibility(View.VISIBLE);
+                options.setVisibility(View.VISIBLE);
                 /* Resume */
-                score_txt.setText(valueOf(stats.score()));
-                level_txt.setText(valueOf(stats.lvl()));
-                coins_txt.setText(valueOf(stats.coins()));
-                diamonds_txt.setText(valueOf(stats.gems()));
-                if(vibrator != null) {
-                    Droid.vibrate(vibrator, 100);
-                }
-            };
-            layout.post(r);
+                GameStats stats = control.stats();
+                score_txt.setText(String.valueOf(stats.score()));
+                level_txt.setText(String.valueOf(stats.lvl()));
+                coins_txt.setText(String.valueOf(stats.coins()));
+                diamonds_txt.setText(String.valueOf(stats.gems()));
+
+            });
         });
     }
 
-    public void start() {
+    public void play() {
         if(control.play()) control.resume();
         else control.start();
-        options.setVisibility(GONE);
-        pause_img.setVisibility(VISIBLE);
+        options.setVisibility(View.GONE);
+        pause_img.setVisibility(View.VISIBLE);
     }
 
 }

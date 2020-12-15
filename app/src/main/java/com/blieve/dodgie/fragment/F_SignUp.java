@@ -2,7 +2,6 @@ package com.blieve.dodgie.fragment;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -14,19 +13,12 @@ import android.widget.EditText;
 import com.blieve.dodgie.R;
 import com.blieve.dodgie.activity.A_Options;
 import com.blieve.dodgie.util.Droid;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class F_SignUp extends Fragment {
 
     private EditText inp_alias, inp_email, inp_pass, inp_pass2;
     private Button btn_signUp;
-    FirebaseAuth auth;
+    // FirebaseAuth auth;
 
     private Droid.Lang lang;
     private final String invalidAlias = "invalidAlias",
@@ -35,7 +27,7 @@ public class F_SignUp extends Fragment {
             requiredField = "required";
 
     @Override
-    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.f_sign_up, container, false);
 
@@ -51,7 +43,7 @@ public class F_SignUp extends Fragment {
 
     private void init() {
         initLang();
-        auth = FirebaseAuth.getInstance();
+        // auth = FirebaseAuth.getInstance();
         clickListen();
     }
 
@@ -75,17 +67,17 @@ public class F_SignUp extends Fragment {
         if(pass2 == null) return false;
         final boolean[] completed = {false};
         if(validate(alias, pass, pass2)) {
-            auth.createUserWithEmailAndPassword(email, pass)
+            /*auth.createUserWithEmailAndPassword(email, pass)
                     .addOnCompleteListener(getActivity(), task -> {
                 if(task.isSuccessful()) {
                     completed[0] = true;
                 }
-            });
+            });*/
         }
         return completed[0];
     }
 
-    private boolean validate(@NotNull String alias, String pass, String pass2) {
+    private boolean validate(String alias, String pass, String pass2) {
         if(alias.length() > 12) {
             inp_alias.setError(lang.getText(alias));
             inp_alias.requestFocus();
@@ -105,8 +97,7 @@ public class F_SignUp extends Fragment {
         return true;
     }
 
-    @Nullable
-    private String require(@NotNull EditText txt) {
+    private String require(EditText txt) {
         String val = txt.getText().toString().trim();
         if(val.isEmpty()) {
             txt.setError(lang.getText(requiredField));

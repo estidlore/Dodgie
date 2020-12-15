@@ -2,11 +2,8 @@ package com.blieve.dodgie.model;
 
 import android.content.SharedPreferences;
 
-import com.blieve.dodgie.activity.A_Skin;
+import com.blieve.dodgie.activity.A_Style;
 import com.blieve.dodgie.fragment.F_Mode;
-import com.blieve.dodgie.util.Droid;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -38,7 +35,7 @@ public class User {
     * 4: block color 1
     * 5: block color 2
     * */
-    private int[] styles;
+    private final int[] styles;
 
     private final ArrayList<Integer> highScores, highLvls;
     private SharedPreferences prefs;
@@ -53,10 +50,11 @@ public class User {
         highScores.clear();
         highLvls.clear();
         this.prefs = prefs;
-        for(int i = F_Mode.modesCount() - 1; i >= 0; i--) {
+        // Adds the high scores and levels in order ascendant
+        for(int n = F_Mode.modesCount(), i = 0; i < n; i++) {
             highScores.add(prefs.getInt(HIGH_SCORE + i, 0));
         }
-        for(int i = F_Mode.modesCount() - 1; i >= 0; i--) {
+        for(int n = F_Mode.modesCount(), i = 0; i < n; i++) {
             highLvls.add(prefs.getInt(HIGH_LEVEL + i, 0));
         }
         alias = prefs.getString(ALIAS, ALIAS);
@@ -69,7 +67,7 @@ public class User {
         }
     }
 
-    public void update(@NotNull GameStats stats) {
+    public void update(GameStats stats) {
         if(stats.score() > highScore(stats.mode())) {
             highScores.set(stats.mode(), stats.score());
             prefs.edit().putInt(HIGH_SCORE + stats.mode(), stats.score()).apply();
@@ -84,13 +82,28 @@ public class User {
                 .putInt(GEMS, gems).apply();
     }
 
+    public boolean subtractCost(int coins, int gems) {
+        if(this.coins >= coins && this.gems >= gems) {
+            this.coins -= coins;
+            this.gems -= gems;
+            prefs.edit().putInt(COINS, coins)
+                    .putInt(GEMS, gems).apply();
+            return true;
+        }
+        return false;
+    }
+
     public int highScore(int mode) {
         return highScores.get(mode);
     }
 
+    public int highLvl(int mode) {
+        return highLvls.get(mode);
+    }
+
     public int style(int i) {
         // if is skin of player or block, style is 0 or 1, else is 2 (color)
-        return A_Skin.style(i % 3 == 0 ? (i / 3) : 2, styles[i]);
+        return A_Style.style(i % 3 == 0 ? (i / 3) : 2, styles[i]);
     }
 
     public void setStyle(int i, int style) {

@@ -12,17 +12,12 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.Display;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.blieve.dodgie.R;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -61,13 +56,13 @@ public class Droid {
     public static void setLandscape(boolean b) {
         if(SCREEN_W == SCREEN_H) return;
         if(b != (SCREEN_W > SCREEN_H)) {
-            SCREEN_W = SCREEN_H - SCREEN_W; // -1 = 3 - 4
-            SCREEN_H = SCREEN_H - SCREEN_W; // 4 = 3 + 1
-            SCREEN_W = SCREEN_H + SCREEN_W; // 3 = 4 - 1
+            SCREEN_W = SCREEN_H - SCREEN_W;
+            SCREEN_H = SCREEN_H - SCREEN_W;
+            SCREEN_W = SCREEN_H + SCREEN_W;
         }
     }
 
-    private static void getScreenSize(@NotNull Context ctx) {
+    private static void getScreenSize(Context ctx) {
         Point size = new Point();
         final Display display = ((WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE))
                 .getDefaultDisplay();
@@ -117,29 +112,14 @@ public class Droid {
         }
 
         private void hideSystemUI() {
-            Window window = getWindow();
-            View decorView = window.getDecorView();
-
-            WindowCompat.setDecorFitsSystemWindows(window, false);
-            /*ViewCompat.setOnApplyWindowInsetsListener(decorView, (v, insets) -> {
-                Insets i = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                decorView.setPadding(i.left, i.top, i.right, i.bottom);
-                return insets;
-            });*/
-            WindowInsetsControllerCompat insetsControllerCompat = new WindowInsetsControllerCompat(window, decorView);
-            insetsControllerCompat.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-            insetsControllerCompat.hide(WindowInsetsCompat.Type.systemBars());
-        }
-
-        /*private void hideUI() {
-            if(Build.VERSION.SDK_INT >= 30) {
-                getWindow().setDecorFitsSystemWindows(false);
-            } else {
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-                Objects.requireNonNull(getSupportActionBar()).hide();
-                // getWindow().getDecorView().setSystemUiVisibility();
+            int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
+            uiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+            uiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+            if (Build.VERSION.SDK_INT >= 19) {
+                uiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             }
-        }*/
+            getWindow().getDecorView().setSystemUiVisibility(uiOptions);
+        }
 
     }
 
@@ -208,7 +188,7 @@ public class Droid {
     }
 
     public static class Data {
-        @NotNull
+        @NonNull
         public static String inputStream(File path, String filename) {
             File file = new File(path, filename);
             byte[] bytes = new byte[(int) file.length()];
@@ -221,7 +201,7 @@ public class Droid {
             return new String(bytes);
         }
 
-        public static void outputStream(File path, String filename, @NotNull String data) {
+        public static void outputStream(File path, String filename, String data) {
             File file = new File(path, filename);
             try {
                 FileOutputStream stream = new FileOutputStream(file);
@@ -232,7 +212,7 @@ public class Droid {
     }
 
     public static class Img {
-        public static Bitmap drawToBmp(@NotNull Drawable drawable, int width, int height) {
+        public static Bitmap drawToBmp(Drawable drawable, int width, int height) {
             Bitmap bmp = createBitmap(width, height, ARGB_8888);
             Canvas cvs = new Canvas(bmp);
             drawable.setBounds(0, 0, width, height);
@@ -240,7 +220,7 @@ public class Droid {
             return bmp;
         }
 
-        public static Bitmap bmpMerge(@NotNull Bitmap bmp1, @NotNull Bitmap bmp2) {
+        public static Bitmap bmpMerge(Bitmap bmp1, Bitmap bmp2) {
             Bitmap result = createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
             Canvas canvas = new Canvas(result);
             canvas.drawBitmap(bmp1, 0, 0, null);
@@ -268,7 +248,7 @@ public class Droid {
     }
 
     public static class UI {
-        public static void setPadding(@NotNull View v, int padding) {
+        public static void setPadding(View v, int padding) {
             v.setPadding(padding, padding, padding, padding);
         }
     }

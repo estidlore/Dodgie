@@ -6,20 +6,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    tools:context=".activity.A_Skin"
+    tools:context=".activity.A_Style"
     tools:ignore="MissingConstraints" >
 
     <ImageView
-        android:id="@+id/skin_back"
+        android:id="@+id/style_back"
         style="@style/img.ui"
         app:srcCompat="@drawable/ui_back"
         app:layout_constraintHorizontal_bias="0.982"
         app:layout_constraintVertical_bias="0.032"
         tools:ignore="MissingConstraints" />
 
-    <!-- SUB-SKIN -->
+    <!-- TABS -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/skin_subskin"
         style="@style/rel"
         android:background="@drawable/ui_gray_bg"
         app:layout_constraintDimensionRatio="2.5"
@@ -28,18 +27,18 @@
         app:layout_constraintVertical_bias="0.064">
 
         <ImageView
-            android:id="@+id/skin_style_img"
+            android:id="@+id/style_tab_skin"
             style="@style/img.skin"
             app:srcCompat="@drawable/_skin_style"
             app:layout_constraintHorizontal_bias="0.1" />
 
         <ImageView
-            android:id="@+id/skin_one_img"
+            android:id="@+id/style_tab_color1"
             style="@style/img.skin"
             app:srcCompat="@drawable/_skin_one" />
 
         <ImageView
-            android:id="@+id/skin_two_img"
+            android:id="@+id/style_tab_color2"
             style="@style/img.skin"
             app:srcCompat="@drawable/_skin_two"
             app:layout_constraintHorizontal_bias="0.9" />
@@ -53,50 +52,41 @@
         app:layout_constraintHeight_percent="0.25"
         app:layout_constraintVertical_bias="0.1">
         <ImageView
-            android:id="@+id/skin_player_preview"
+            android:id="@+id/style_preview_player"
             style="@style/img.skin"
             app:srcCompat="@drawable/player"
             app:layout_constraintHorizontal_bias="0.15" />
 
         <ImageView
-            android:id="@+id/skin_block_preview"
+            android:id="@+id/style_preview_block"
             style="@style/img.skin"
             app:srcCompat="@drawable/block"
             app:layout_constraintHorizontal_bias="0.85" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     <!-- STYLES -->
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/style_panel"
         style="@style/rel"
         android:background="@drawable/ui_gray_bg"
+        app:layout_constraintWidth_percent="0.75"
         app:layout_constraintHeight_percent="0.4"
-        app:layout_constraintVertical_bias="0.75"
-        app:layout_constraintWidth_percent="0.75">
-        <LinearLayout
-            android:id="@+id/skin_styles"
+        app:layout_constraintVertical_bias="0.75">
+        <GridView
+            android:id="@+id/style_player"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/skin_faces"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <LinearLayout
-                android:id="@+id/skin_blocks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <LinearLayout
-                android:id="@+id/skin_colors"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </LinearLayout>
-    </ScrollView>
+            android:numColumns="12"/>
+        <GridView
+            android:id="@+id/style_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="12"/>
+        <GridView
+            android:id="@+id/style_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="12"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
