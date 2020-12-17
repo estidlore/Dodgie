@@ -101,9 +101,13 @@ public class User {
         return highLvls.get(mode);
     }
 
-    public int style(int i) {
+    public int getStyleDrawable(int i) {
         // if is skin of player or block, style is 0 or 1, else is 2 (color)
         return A_Style.style(i % 3 == 0 ? (i / 3) : 2, styles[i]);
+    }
+
+    public int getStyle(int i) {
+        return styles[i];
     }
 
     public void setStyle(int i, int style) {

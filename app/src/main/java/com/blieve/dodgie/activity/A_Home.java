@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 
 import com.blieve.dodgie.controller.ControlHome;
 import com.blieve.dodgie.fragment.F_Mode;
@@ -111,9 +112,9 @@ public class A_Home extends Droid.BaseActivity {
     private void setPlayerStyle() {
         Resources res = getResources();
         Drawable skin = res.getDrawable(R.drawable.player),
-                face = res.getDrawable(User.get().style(0));
-        skin.setColorFilter(User.get().style(1), PorterDuff.Mode.MULTIPLY);
-        face.setColorFilter(User.get().style(2), PorterDuff.Mode.MULTIPLY);
+                face = res.getDrawable(User.get().getStyleDrawable(0));
+        skin.setColorFilter(User.get().getStyleDrawable(1), PorterDuff.Mode.MULTIPLY);
+        face.setColorFilter(User.get().getStyleDrawable(2), PorterDuff.Mode.MULTIPLY);
 
         int diameter = Droid.width(8);
         imgSkin.setImageBitmap(Droid.Img.bmpMerge(

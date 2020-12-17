@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,18 +19,24 @@ import com.blieve.dodgie.activity.A_Options;
 import com.blieve.dodgie.model.GameStats;
 import com.blieve.dodgie.model.User;
 import com.blieve.dodgie.util.Droid;
+import com.blieve.dodgie.util.TxtAdapter;
 
 public class F_Mode extends Fragment {
 
     private static final String[] modes = {"clasic", "party", "overturned", "gravity"};
+
+    private final String initLvl = "initLvl";
+
     private String[] modesText;
+    private Droid.Lang lang;
     private ImageView imgLvlMinus, imgLvlPlus, imgPlay;
+    private Intent _game;
     private ListView list;
     private TextView txtCostCoins, txtCostDiamonds, txtHighLvl, txtHighScore, txtInitLvl,
             txtInitLvlValue;
-    private Intent _game;
+    private TxtAdapter txtAdapter;
 
-    private int costCoins, costDiamonds, highLvl, highScore, initLvl, mode;
+    private int costCoins, costDiamonds, highLvl, highScore, initLvlValue, mode;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,13 +60,16 @@ public class F_Mode extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        selectMode(mode);
+        setModeValues();
+        setTextLangs();
     }
 
     private void init() {
         _game = new Intent(getActivity(), A_Game.class);
         modesText = new String[modes.length];
-        list.setSelector(R.color.color_gray);
+        txtAdapter = new TxtAdapter(getContext(), R.layout.f_mode_list_item, modesText);
+        list.setAdapter(txtAdapter);
+        selectMode(0);
         clickListen();
         itemClickListen();
         initLangs();
@@ -71,17 +79,17 @@ public class F_Mode extends Fragment {
         View.OnClickListener clickListen = v -> {
             if(v == imgLvlMinus) {
                 //if(initLvl > 1) {
-                    --initLvl;
+                    initLvlValue--;
                     setCosts();
                 //}
             } else if (v == imgLvlPlus) {
                 //if(initLvl < highLvl) {
-                    ++initLvl;
+                    initLvlValue++;
                     setCosts();
                 //}
             } else if (v == imgPlay) {
                 if (User.get().subtractCost(costCoins, costDiamonds)) {
-                    _game.putExtra(GameStats.INIT_LVL, initLvl);
+                    _game.putExtra(GameStats.INIT_LVL, initLvlValue);
                     _game.putExtra(GameStats.MODE, mode);
                     startActivity(_game);
                 } else {
@@ -95,30 +103,38 @@ public class F_Mode extends Fragment {
     }
 
     private void itemClickListen() {
-        AdapterView.OnItemClickListener itemClickListen = (parent, view, position, id)
-                -> selectMode(position);
+        AdapterView.OnItemClickListener itemClickListen = (parent, view, position, id) -> {
+            if(position != txtAdapter.getSelection()) {
+                selectMode(position);
+            }
+        };
         list.setOnItemClickListener(itemClickListen);
     }
 
+    private void setModeValues() {
+        User user = User.get();
+        highLvl = user.highLvl(mode);
+        highScore = user.highScore(mode);
+        txtHighLvl.setText(String.valueOf(highLvl));
+        txtHighScore.setText(String.valueOf(highScore));
+    }
+
     private void setCosts() {
-        txtInitLvlValue.setText(String.valueOf(initLvl));
-        imgLvlMinus.setVisibility(initLvl > 1 ? View.VISIBLE : View.GONE);
-        imgLvlPlus.setVisibility(initLvl < highLvl ? View.VISIBLE : View.GONE);
-        costCoins = (initLvl - 1) * GameStats.PTS_PER_LVL;
-        costDiamonds = (initLvl - 1);
+        txtInitLvlValue.setText(String.valueOf(initLvlValue));
+        imgLvlMinus.setVisibility(initLvlValue > 1 ? View.VISIBLE : View.GONE);
+        imgLvlPlus.setVisibility(initLvlValue < highLvl ? View.VISIBLE : View.GONE);
+        costCoins = (initLvlValue - 1) * GameStats.PTS_PER_LVL;
+        costDiamonds = (initLvlValue - 1);
         txtCostCoins.setText(String.valueOf(costCoins));
         txtCostDiamonds.setText(String.valueOf(costDiamonds));
     }
 
     private void selectMode(int mode) {
         this.mode = mode;
-        initLvl = 1;
-        User user = User.get();
-        highLvl = user.highLvl(mode);
-        highScore = user.highScore(mode);
-        txtHighLvl.setText(String.valueOf(highLvl));
-        txtHighScore.setText(String.valueOf(highScore));
+        initLvlValue = 1;
+        setModeValues();
         setCosts();
+        txtAdapter.setSelection(mode);
     }
 
     public static int modesCount() {
@@ -128,12 +144,11 @@ public class F_Mode extends Fragment {
     private void initLangs() {
         int enIndex = Droid.Lang.indexOf(A_Options.ENGLISH),
                 esIndex = Droid.Lang.indexOf(A_Options.SPANISH);
-        Droid.Lang lang = new Droid.Lang();
+        lang = new Droid.Lang();
         // Initial lvl
         String initLvl = "initLvl";
         lang.addText(initLvl, enIndex, "Initial level");
         lang.addText(initLvl, esIndex, "Nivel inicial");
-        txtInitLvl.setText(lang.getText(initLvl));
         // Modes
         String clasic = modes[0],
                 party = modes[1],
@@ -147,11 +162,14 @@ public class F_Mode extends Fragment {
         lang.addText(overturned, esIndex, "De cabeza");
         lang.addText(gravity, enIndex, "Anti-gravity");
         lang.addText(gravity, esIndex, "Antigravedad");
+    }
+
+    private void setTextLangs() {
+        txtInitLvl.setText(lang.getText(initLvl));
         for(int i = modes.length - 1; i >= 0; i--) {
             modesText[i] = lang.getText(modes[i]);
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.f_mode_list_item, modesText);
-        list.setAdapter(adapter);
+        txtAdapter.notifyDataSetChanged();
     }
 
 }

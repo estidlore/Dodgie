@@ -7,7 +7,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-public class ImageAdapter extends BaseAdapter {
+import androidx.core.content.res.ResourcesCompat;
+
+import com.blieve.dodgie.R;
+
+public class ImgAdapter extends BaseAdapter {
 
     private final Bitmap[] bmps;
     private final Context ctx;
@@ -15,11 +19,15 @@ public class ImageAdapter extends BaseAdapter {
 
     private final int imgPadding;
 
-    public ImageAdapter(Context ctx, Bitmap[] bmps, int imgSize, int imgPadding) {
+    private int selection;
+
+    public ImgAdapter(Context ctx, Bitmap[] bmps, int imgSize, int imgPadding) {
         this.ctx = ctx;
         this.bmps = bmps;
         this.imgParams = new ViewGroup.LayoutParams(imgSize, imgSize);
         this.imgPadding = imgPadding;
+
+        this.selection = -1;
     }
 
     @Override
@@ -43,6 +51,19 @@ public class ImageAdapter extends BaseAdapter {
         img.setImageBitmap(bmps[position]);
         img.setLayoutParams(imgParams);
         Droid.UI.setPadding(img, imgPadding);
+        img.setBackground(ResourcesCompat.getDrawable(ctx.getResources(),
+                position == selection ? R.drawable.ui_gridview_selector : R.drawable.ui_empty,
+                null));
         return img;
     }
+
+    public final void setSelection(int selection) {
+        this.selection = selection;
+        notifyDataSetChanged();
+    }
+
+    public final int getSelection() {
+        return selection;
+    }
+
 }

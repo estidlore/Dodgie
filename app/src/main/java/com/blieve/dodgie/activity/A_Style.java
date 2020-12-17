@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -16,7 +17,7 @@ import androidx.core.content.res.ResourcesCompat;
 import com.blieve.dodgie.R;
 import com.blieve.dodgie.model.User;
 import com.blieve.dodgie.util.Droid;
-import com.blieve.dodgie.util.ImageAdapter;
+import com.blieve.dodgie.util.ImgAdapter;
 
 public class A_Style extends Droid.BaseActivity {
 
@@ -198,6 +199,7 @@ public class A_Style extends Droid.BaseActivity {
     }
 
     private GridView[] gridsStyle;
+    private ImgAdapter[] imgAdaptsStyle;
     private ImageView[] imgsSection, imgsPreview;
     private ImageView imgBack;
     private LinearLayout lytPanel;
@@ -228,24 +230,23 @@ public class A_Style extends Droid.BaseActivity {
     }
 
     private void init() {
-        style = -1;
-        section = -1;
+        imgAdaptsStyle = new ImgAdapter[3];
         for(ImageView i : imgsPreview) {
             Droid.UI.setPadding(i, Droid.height(2));
         }
+        iniStyles();
+        style = -1;
         setStyle(0);
+        section = -1;
         setSection(0);
         clickListen();
-        iniStyles();
     }
 
     private void iniStyles() {
         Resources res = getResources();
         SharedPreferences prefs = getSharedPreferences(User.ALIAS, MODE_PRIVATE);
         User user = User.get();
-        int size = Droid.width(6),
-                padding = size / 6,
-                bmpSize = size - padding * 2;
+        int size = Droid.width(6), padding = size / 6, bmpSize = size - padding * 2;
         Droid.UI.setPadding(lytPanel, size / 2);
         // styles
         for(int i = gridsStyle.length - 1; i >= 0; i--) {
@@ -265,15 +266,18 @@ public class A_Style extends Droid.BaseActivity {
                     );
                 }
             }
-            ImageAdapter imgAdapter = new ImageAdapter(this, bmps, size, padding);
-            gridsStyle[i].setAdapter(imgAdapter);
+            imgAdaptsStyle[i] = new ImgAdapter(this, bmps, size, padding);
+            gridsStyle[i].setAdapter(imgAdaptsStyle[i]);
+            int finalI = i;
             gridsStyle[i].setOnItemClickListener((parent, view, position, id) -> {
-                int styleIndex = style * 3 + section;
-                user.setStyle(styleIndex, position);
-                prefs.edit().putInt(User.STYLE + styleIndex, position).apply();
-                setPreviews();
+                if(position != imgAdaptsStyle[finalI].getSelection()) {
+                    int styleIndex = style * 3 + section;
+                    user.setStyle(styleIndex, position);
+                    prefs.edit().putInt(User.STYLE + styleIndex, position).apply();
+                    imgAdaptsStyle[finalI].setSelection(position);
+                    setPreviews();
+                }
             });
-            gridsStyle[i].setSelector(R.drawable.ui_gridview_selector);
         }
         setPreviews();
     }
@@ -284,18 +288,18 @@ public class A_Style extends Droid.BaseActivity {
         int prevSize = Droid.width(7);
         // player
         Drawable skin = ResourcesCompat.getDrawable(res, R.drawable.player, null),
-                face = ResourcesCompat.getDrawable(res, user.style(0), null);
-        skin.setColorFilter(user.style(1), PorterDuff.Mode.MULTIPLY);
-        face.setColorFilter(user.style(2), PorterDuff.Mode.MULTIPLY);
+                face = ResourcesCompat.getDrawable(res, user.getStyleDrawable(0), null);
+        skin.setColorFilter(user.getStyleDrawable(1), PorterDuff.Mode.MULTIPLY);
+        face.setColorFilter(user.getStyleDrawable(2), PorterDuff.Mode.MULTIPLY);
         imgsPreview[0].setImageBitmap(Droid.Img.bmpMerge(
                 Droid.Img.drawToBmp(skin, prevSize, prevSize),
                 Droid.Img.drawToBmp(face, prevSize, prevSize)
         ));
         // block
         Drawable block = ResourcesCompat.getDrawable(res, R.drawable.block, null),
-                blockFace = ResourcesCompat.getDrawable(res, user.style(3), null);
-        block.setColorFilter(user.style(4), PorterDuff.Mode.MULTIPLY);
-        blockFace.setColorFilter(user.style(5), PorterDuff.Mode.MULTIPLY);
+                blockFace = ResourcesCompat.getDrawable(res, user.getStyleDrawable(3), null);
+        block.setColorFilter(user.getStyleDrawable(4), PorterDuff.Mode.MULTIPLY);
+        blockFace.setColorFilter(user.getStyleDrawable(5), PorterDuff.Mode.MULTIPLY);
 
         imgsPreview[1].setImageBitmap(Droid.Img.bmpMerge(
                 Droid.Img.drawToBmp(block, prevSize, prevSize),
@@ -309,7 +313,7 @@ public class A_Style extends Droid.BaseActivity {
         for(int i = imgsPreview.length - 1; i >= 0; i--) {
             imgsPreview[i].setBackgroundColor(i == style ? 0x44000000 : 0);
         }
-        if(section == 0) showSection();
+        showPanel();
     }
 
     private void setSection(int section) {
@@ -318,14 +322,19 @@ public class A_Style extends Droid.BaseActivity {
         for(int i = imgsSection.length - 1; i >= 0; i--) {
             imgsSection[i].setBackgroundColor(i == section ? 0x44000000 : 0);
         }
-        showSection();
+        showPanel();
     }
 
-    private void showSection() {
+    private void showPanel() {
         // 0 = face   1 = block   2 = color
-        int section = this.section < 1 ? style : 2;
+        int panel = section < 1 ? style : 2;
         for(int i = gridsStyle.length - 1; i >= 0; i--) {
-            gridsStyle[i].setVisibility(i == section ? View.VISIBLE : View.GONE);
+            gridsStyle[i].setVisibility(i == panel ? View.VISIBLE : View.GONE);
+            if(i == panel) {
+                int a = style * 3 + section, b = User.get().getStyle(a);
+                Log.d("debug", "setSelection" + a + ": " + b);
+                imgAdaptsStyle[i].setSelection(b);
+            }
         }
     }
 
@@ -349,11 +358,11 @@ public class A_Style extends Droid.BaseActivity {
             }
         };
         imgBack.setOnClickListener(clickListener);
-        for(int i = imgsPreview.length - 1; i >= 0; i--) {
-            imgsPreview[i].setOnClickListener(clickListener);
+        for(ImageView i : imgsPreview) {
+            i.setOnClickListener(clickListener);
         }
-        for(int i = imgsSection.length - 1; i >= 0; i--) {
-            imgsSection[i].setOnClickListener(clickListener);
+        for(ImageView i : imgsSection) {
+            i.setOnClickListener(clickListener);
         }
     }
 

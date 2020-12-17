@@ -53,9 +53,9 @@ public class ControlHome extends View {
     public void setBlockStyle() {
         Resources res = getResources();
         Drawable block = res.getDrawable(R.drawable.block),
-                blockFace = res.getDrawable(User.get().style(3));
-        block.setColorFilter(User.get().style(4), MULTIPLY);
-        blockFace.setColorFilter(User.get().style(5), MULTIPLY);
+                blockFace = res.getDrawable(User.get().getStyleDrawable(3));
+        block.setColorFilter(User.get().getStyleDrawable(4), MULTIPLY);
+        blockFace.setColorFilter(User.get().getStyleDrawable(5), MULTIPLY);
 
         int size = Block.width();
         block_bmp = Droid.Img.bmpMerge(

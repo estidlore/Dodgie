@@ -78,16 +78,16 @@ public class ControlGame extends View {
         // User drawable
         User user = User.get();
         Drawable skin = res.getDrawable(R.drawable.player),
-                face = res.getDrawable(user.style(0));
-        skin.setColorFilter(user.style(1), PorterDuff.Mode.MULTIPLY);
-        face.setColorFilter(user.style(2), PorterDuff.Mode.MULTIPLY);
+                face = res.getDrawable(user.getStyleDrawable(0));
+        skin.setColorFilter(user.getStyleDrawable(1), PorterDuff.Mode.MULTIPLY);
+        face.setColorFilter(user.getStyleDrawable(2), PorterDuff.Mode.MULTIPLY);
         skin_bmp = Droid.Img.drawToBmp(skin, diameter, diameter);
         face_bmp = Droid.Img.drawToBmp(face, diameter, diameter);
         // Block drawable
         Drawable block = res.getDrawable(R.drawable.block),
-                blockFace = res.getDrawable(user.style(3));
-        block.setColorFilter(user.style(4), PorterDuff.Mode.MULTIPLY);
-        blockFace.setColorFilter(user.style(5), PorterDuff.Mode.MULTIPLY);
+                blockFace = res.getDrawable(user.getStyleDrawable(3));
+        block.setColorFilter(user.getStyleDrawable(4), PorterDuff.Mode.MULTIPLY);
+        blockFace.setColorFilter(user.getStyleDrawable(5), PorterDuff.Mode.MULTIPLY);
         block_bmp = Droid.Img.bmpMerge(
                 Droid.Img.drawToBmp(block, size, size),
                 Droid.Img.drawToBmp(blockFace, size, size)

@@ -89,9 +89,11 @@ public class A_Options extends Droid.BaseActivity {
         spin_lang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Droid.Lang.setLang(position);
-                prefs.edit().putInt(LANGUAGE, position).apply();
-                setTextsLang();
+                if(position != Droid.Lang.getLang()) {
+                    Droid.Lang.setLang(position);
+                    prefs.edit().putInt(LANGUAGE, position).apply();
+                    setTextsLang();
+                }
             }
             @Override public void onNothingSelected(AdapterView<?> parent) { }
         });

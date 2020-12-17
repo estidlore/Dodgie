@@ -58,6 +58,8 @@
         <Spinner
             android:id="@+id/opts_spin_lang"
             style="@style/input.options"
+            android:theme="@style/light"
+            android:popupBackground="@drawable/ui_round_box"
             android:entries="@array/languages"
             app:layout_constraintVertical_bias="0.65" />
 
@@ -65,7 +67,7 @@
             android:id="@+id/opts_check_vibration"
             style="@style/input.options"
             android:background="#0000"
-            android:textColor="#FFFFFF"
+            android:textColor="#ffffff"
             android:theme="@style/dark"
             app:layout_constraintVertical_bias="0.95" />
     </androidx.constraintlayout.widget.ConstraintLayout>
