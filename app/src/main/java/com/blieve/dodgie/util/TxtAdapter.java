@@ -1,6 +1,7 @@
 package com.blieve.dodgie.util;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,24 +44,28 @@ public class TxtAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TextView text = (TextView) createViewFromResource(inflater, resource, convertView, parent);
+        Log.d("debug", "getView() start");
+        final TextView text;
+        if (convertView == null) {
+            text = (TextView) inflater.inflate(resource, parent, false);
+        } else {
+            text = (TextView) convertView;
+        }
         text.setText(txts[position]);
         text.setBackgroundColor(position == selection ? 0x88888888 : 0x00000000);
+        Log.d("debug", "getView() end");
         return text;
     }
 
     public final void setSelection(int selection) {
+        Log.d("debug", "setSelection() start");
         this.selection = selection;
         notifyDataSetChanged();
+        Log.d("debug", "setSelection() end");
     }
 
     public final int getSelection() {
         return selection;
-    }
-
-    private View createViewFromResource(LayoutInflater inflater, int resource, View convertView,
-            ViewGroup parent) {
-        return (convertView == null ? inflater.inflate(resource, parent, false) : convertView);
     }
 
 }

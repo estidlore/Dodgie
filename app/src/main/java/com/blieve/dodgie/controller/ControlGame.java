@@ -9,7 +9,10 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.blieve.dodgie.R;
 import com.blieve.dodgie.model.Block;
@@ -32,14 +35,13 @@ public class ControlGame extends View {
     private final Update update;
 
     private final boolean[] keys;
-    private final float d, originX, originY, spt, x, y;
-    private boolean play;
+    private final float originX, originY, spt, x, y;
+    private boolean play, rotate;
     private int blocksN, aX, aY, highScore;
-    private float speed;
+    private float speed, d;
 
     private final Bitmap skin_bmp, face_bmp, block_bmp;
     private final Paint score_pnt, lvl_pnt;
-    private final boolean rotate;
     private float scoreX, highScoreY, scoreY, prgY, prg;
 
     public ControlGame(Context ctx, AttributeSet attrs) {
@@ -63,9 +65,8 @@ public class ControlGame extends View {
         blocks = new ArrayList<>();
         gameOverListen = new Droid.Listen();
 
-        d = CELL_W * (stats.mode() == 2 ? 4 : 3);
-        originX = Droid.SCREEN_W / 2.0f;
-        originY = Droid.SCREEN_H / 2.0f;
+        originX = Droid.UI.SCREEN_W / 2.0f;
+        originY = Droid.UI.SCREEN_H / 2.0f;
         x = (CELLS_X + 1) / 2;
         y = (CELLS_Y + 1) / 2;
 
@@ -77,26 +78,31 @@ public class ControlGame extends View {
                 size = Block.width();
         // User drawable
         User user = User.get();
-        Drawable skin = res.getDrawable(R.drawable.player),
-                face = res.getDrawable(user.getStyleDrawable(0));
+        Drawable skin = ResourcesCompat.getDrawable(res, R.drawable.player, null),
+                face = ResourcesCompat.getDrawable(res, user.getStyleDrawable(0), null);
+        assert skin != null && face != null;
         skin.setColorFilter(user.getStyleDrawable(1), PorterDuff.Mode.MULTIPLY);
         face.setColorFilter(user.getStyleDrawable(2), PorterDuff.Mode.MULTIPLY);
         skin_bmp = Droid.Img.drawToBmp(skin, diameter, diameter);
         face_bmp = Droid.Img.drawToBmp(face, diameter, diameter);
         // Block drawable
-        Drawable block = res.getDrawable(R.drawable.block),
-                blockFace = res.getDrawable(user.getStyleDrawable(3));
+        Drawable block = ResourcesCompat.getDrawable(res, R.drawable.block, null),
+                blockFace = ResourcesCompat.getDrawable(res, user.getStyleDrawable(3), null);
+        assert block != null && blockFace != null;
         block.setColorFilter(user.getStyleDrawable(4), PorterDuff.Mode.MULTIPLY);
         blockFace.setColorFilter(user.getStyleDrawable(5), PorterDuff.Mode.MULTIPLY);
         block_bmp = Droid.Img.bmpMerge(
                 Droid.Img.drawToBmp(block, size, size),
                 Droid.Img.drawToBmp(blockFace, size, size)
         );
-
-        rotate = stats.mode() == 1;
     }
 
-    public void init() {
+    public void init(int initLvl, int mode) {
+        stats.setInitLvl(initLvl);
+        stats.setMode(mode);
+        rotate = stats.mode() == 2; // overturned
+        d = CELL_W * (stats.mode() == 1 ? 4 : 3); // party
+
         float textSize = CELL_W / 2.5f,
                 stroke = CELL_W / 10;
         scoreX = textSize / 2 - originX;
@@ -160,9 +166,7 @@ public class ControlGame extends View {
     @Override
     public void onDraw(Canvas cvs) {
         cvs.translate(originX, originY);
-        if(rotate) {
-            cvs.rotate(180);
-        }
+        if(rotate) cvs.rotate(180);
         cvs.drawColor(Color.BLACK);
         // draw player
         Player p = player;
@@ -178,9 +182,7 @@ public class ControlGame extends View {
             b = blocks.get(i);
             cvs.drawBitmap(block_bmp, b.left(), b.top(), null);
         }
-        if(rotate) {
-            cvs.rotate(-180);
-        }
+        if(rotate) cvs.rotate(-180);
         // draw text
         cvs.drawText(String.valueOf(highScore), scoreX, highScoreY, score_pnt);
         cvs.drawText(String.valueOf(stats.score()), scoreX, scoreY, score_pnt);

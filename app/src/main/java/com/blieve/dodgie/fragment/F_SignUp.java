@@ -16,11 +16,13 @@ import com.blieve.dodgie.util.Droid;
 
 public class F_SignUp extends Fragment {
 
-    private EditText inp_alias, inp_email, inp_pass, inp_pass2;
     private Button btn_signUp;
+    private EditText inp_alias, inp_email, inp_pass, inp_pass2;
     // FirebaseAuth auth;
 
     private Droid.Lang lang;
+    private Droid.Media media;
+
     private final String invalidAlias = "invalidAlias",
             invalidPassword = "invalidPass",
             invalidConfirmPassword = "invalidPass2",
@@ -42,6 +44,8 @@ public class F_SignUp extends Fragment {
     }
 
     private void init() {
+        media = Droid.Media.get();
+
         initLang();
         // auth = FirebaseAuth.getInstance();
         clickListen();
@@ -49,6 +53,7 @@ public class F_SignUp extends Fragment {
 
     private void clickListen() {
         View.OnClickListener onclick = v -> {
+            media.playSound(Droid.Media.CLICK);
             if(v == btn_signUp) {
                 signUp();
             }
@@ -109,8 +114,8 @@ public class F_SignUp extends Fragment {
     }
 
     private void initLang() {
-        int english = Droid.Lang.indexOf(A_Options.ENGLISH),
-                spanish = Droid.Lang.indexOf(A_Options.SPANISH);
+        int english = Droid.Lang.indexOf(Droid.Lang.ENGLISH),
+                spanish = Droid.Lang.indexOf(Droid.Lang.SPANISH);
         String alias = "alias",
                 email = "email",
                 password = "pass",

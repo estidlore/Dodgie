@@ -203,6 +203,8 @@ public class A_Style extends Droid.BaseActivity {
     private ImageView[] imgsSection, imgsPreview;
     private ImageView imgBack;
     private LinearLayout lytPanel;
+
+    private Droid.Media media;
     private int style, section;
 
     @Override
@@ -232,8 +234,10 @@ public class A_Style extends Droid.BaseActivity {
     private void init() {
         imgAdaptsStyle = new ImgAdapter[3];
         for(ImageView i : imgsPreview) {
-            Droid.UI.setPadding(i, Droid.height(2));
+            Droid.UI.setPadding(i, Droid.UI.height(2));
         }
+        media = Droid.Media.get();
+
         iniStyles();
         style = -1;
         setStyle(0);
@@ -246,7 +250,7 @@ public class A_Style extends Droid.BaseActivity {
         Resources res = getResources();
         SharedPreferences prefs = getSharedPreferences(User.ALIAS, MODE_PRIVATE);
         User user = User.get();
-        int size = Droid.width(6), padding = size / 6, bmpSize = size - padding * 2;
+        int size = Droid.UI.width(6), padding = size / 6, bmpSize = size - padding * 2;
         Droid.UI.setPadding(lytPanel, size / 2);
         // styles
         for(int i = gridsStyle.length - 1; i >= 0; i--) {
@@ -254,11 +258,13 @@ public class A_Style extends Droid.BaseActivity {
             for(int j = 0, n = styles[i].length; j < n; j++) {
                 Drawable d = ResourcesCompat.getDrawable(res, i == 1 ? R.drawable.block :
                         R.drawable.player, null); // Either for player or color
+                assert d != null;
                 if(i == 2) {
                     d.setColorFilter(styles[2][j], PorterDuff.Mode.MULTIPLY);
                     bmps[j] = Droid.Img.drawToBmp(d, bmpSize, bmpSize);
                 } else {
                     Drawable d2 = ResourcesCompat.getDrawable(res, style(i, j), null);
+                    assert d2 != null;
                     d2.setColorFilter(0xFF000000, PorterDuff.Mode.MULTIPLY);
                     bmps[j] = Droid.Img.bmpMerge(
                             Droid.Img.drawToBmp(d, bmpSize, bmpSize),
@@ -285,10 +291,11 @@ public class A_Style extends Droid.BaseActivity {
     private void setPreviews() {
         Resources res = getResources();
         User user = User.get();
-        int prevSize = Droid.width(7);
+        int prevSize = Droid.UI.width(7);
         // player
         Drawable skin = ResourcesCompat.getDrawable(res, R.drawable.player, null),
                 face = ResourcesCompat.getDrawable(res, user.getStyleDrawable(0), null);
+        assert skin != null && face != null;
         skin.setColorFilter(user.getStyleDrawable(1), PorterDuff.Mode.MULTIPLY);
         face.setColorFilter(user.getStyleDrawable(2), PorterDuff.Mode.MULTIPLY);
         imgsPreview[0].setImageBitmap(Droid.Img.bmpMerge(
@@ -298,6 +305,7 @@ public class A_Style extends Droid.BaseActivity {
         // block
         Drawable block = ResourcesCompat.getDrawable(res, R.drawable.block, null),
                 blockFace = ResourcesCompat.getDrawable(res, user.getStyleDrawable(3), null);
+        assert block!= null && blockFace != null;
         block.setColorFilter(user.getStyleDrawable(4), PorterDuff.Mode.MULTIPLY);
         blockFace.setColorFilter(user.getStyleDrawable(5), PorterDuff.Mode.MULTIPLY);
 
@@ -340,6 +348,7 @@ public class A_Style extends Droid.BaseActivity {
 
     private void clickListen() {
         View.OnClickListener clickListener = v -> {
+            media.playSound(Droid.Media.CLICK);
             if (v == imgBack) {
                 finish();
                 return;

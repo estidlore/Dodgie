@@ -18,8 +18,6 @@ import java.util.ArrayList;
 
 import static android.graphics.Color.BLACK;
 import static android.graphics.PorterDuff.Mode.MULTIPLY;
-import static com.blieve.dodgie.util.Droid.SCREEN_H;
-import static com.blieve.dodgie.util.Droid.SCREEN_W;
 import static java.lang.Math.random;
 
 public class ControlHome extends View {
@@ -38,8 +36,8 @@ public class ControlHome extends View {
         d = ControlGame.CELL_W * 3;
         speed = 2;
         spt = 1f / fps;
-        originX = SCREEN_W / 2.0f;
-        originY = SCREEN_H / 2.0f;
+        originX = Droid.UI.SCREEN_W / 2.0f;
+        originY = Droid.UI.SCREEN_H / 2.0f;
         update = new Update(fps) {
             @Override
             public void tick() {

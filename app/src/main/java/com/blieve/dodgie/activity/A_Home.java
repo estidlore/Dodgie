@@ -4,13 +4,14 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.blieve.dodgie.controller.ControlHome;
 import com.blieve.dodgie.fragment.F_Mode;
@@ -24,6 +25,7 @@ public class A_Home extends Droid.BaseActivity {
     private ControlHome control;
     private ImageView imgClose, imgInfo, imgLeaderBoard, imgMode, imgOptions, imgSkin;
     private Intent _info, _leaderBoard, _options, _skin;
+    private Droid.Media media;
     private TextView txtCoins, txtGems;
 
     @Override
@@ -68,11 +70,14 @@ public class A_Home extends Droid.BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.home_pop_frg, new F_Mode()).commit();
 
+        media = Droid.Media.get();
+
         clickListener();
     }
 
     private void clickListener() {
         View.OnClickListener clickListen = v -> {
+            media.playSound(Droid.Media.CLICK);
             if(v == imgClose) {
                 closePop();
             } else if(v == imgMode) {
@@ -111,12 +116,12 @@ public class A_Home extends Droid.BaseActivity {
 
     private void setPlayerStyle() {
         Resources res = getResources();
-        Drawable skin = res.getDrawable(R.drawable.player),
-                face = res.getDrawable(User.get().getStyleDrawable(0));
+        Drawable skin = ResourcesCompat.getDrawable(res, R.drawable.player, null),
+                face = ResourcesCompat.getDrawable(res, User.get().getStyleDrawable(0), null);
         skin.setColorFilter(User.get().getStyleDrawable(1), PorterDuff.Mode.MULTIPLY);
         face.setColorFilter(User.get().getStyleDrawable(2), PorterDuff.Mode.MULTIPLY);
 
-        int diameter = Droid.width(8);
+        int diameter = Droid.UI.width(8);
         imgSkin.setImageBitmap(Droid.Img.bmpMerge(
                 Droid.Img.drawToBmp(skin, diameter, diameter),
                 Droid.Img.drawToBmp(face, diameter, diameter)

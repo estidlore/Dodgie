@@ -11,6 +11,8 @@ public class A_Leaderboard extends Droid.BaseActivity {
 
     private ImageView img_back;
 
+    private Droid.Media media;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +24,14 @@ public class A_Leaderboard extends Droid.BaseActivity {
     }
 
     private void init() {
+        media = Droid.Media.get();
+
+        clickListen();
+    }
+
+    private void clickListen() {
         View.OnClickListener clickListener = v -> {
+            media.playSound(Droid.Media.CLICK);
             if (v == img_back) {
                 finish();
             }

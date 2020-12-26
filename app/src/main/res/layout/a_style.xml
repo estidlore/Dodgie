@@ -5,7 +5,6 @@
     android:id="@+id/skin_lyt"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
     tools:context=".activity.A_Style"
     tools:ignore="MissingConstraints" >
 
@@ -13,8 +12,8 @@
         android:id="@+id/style_back"
         style="@style/img.ui"
         app:srcCompat="@drawable/ui_back"
-        app:layout_constraintHorizontal_bias="0.982"
-        app:layout_constraintVertical_bias="0.032"
+        app:layout_constraintHorizontal_bias="0.991"
+        app:layout_constraintVertical_bias="0.016"
         tools:ignore="MissingConstraints" />
 
     <!-- TABS -->

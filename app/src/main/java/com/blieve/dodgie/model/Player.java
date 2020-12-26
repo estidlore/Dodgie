@@ -1,9 +1,8 @@
 package com.blieve.dodgie.model;
 
 import com.blieve.dodgie.controller.ControlGame;
+import com.blieve.dodgie.util.Droid;
 
-import static com.blieve.dodgie.util.Droid.SCREEN_H;
-import static com.blieve.dodgie.util.Droid.SCREEN_W;
 import static java.lang.Math.signum;
 import static java.lang.Math.sqrt;
 
@@ -24,8 +23,8 @@ public class Player extends GameObject {
     public final void setR(float r) {
         this.r = r;
         r2 = r * r;
-        maxX = SCREEN_W / 2f - r;
-        maxY = SCREEN_H / 2f - r;
+        maxX = Droid.UI.SCREEN_W / 2f - r;
+        maxY = Droid.UI.SCREEN_H / 2f - r;
     }
 
     public void setMaxVX(float v) {

@@ -123,7 +123,7 @@
             android:id="@+id/mode_img_play"
             style="@style/img.ui"
             app:srcCompat="@drawable/ui_play"
-            app:layout_constraintWidth_percent="0.15"
+            app:layout_constraintWidth_percent="0.2"
             app:layout_constraintVertical_bias="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -135,8 +135,4 @@
         app:layout_constraintHeight_percent="0.8"
         app:layout_constraintHorizontal_bias="0.9">
     </ListView>
-    <!-- <TextView
-            android:id="@+id/mode_txt_clasic"
-            style="@style/text_list"
-            android:text="Vertical" /> -->
 </androidx.constraintlayout.widget.ConstraintLayout>

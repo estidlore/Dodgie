@@ -25,42 +25,38 @@ public class A_Options extends Droid.BaseActivity {
 
     public final static String
             PREF_CONFIG = "cnfg",
-            SOUND = "sond",
-            MUSIC = "musc",
-            VIBRATION = "vibr",
-            LANGUAGE = "lang",
-            ENGLISH  = "en",
-            SPANISH  = "es";
+            VIBRATION = "vibr";
     private final String
             SIGN_IN = "signIn",
             SIGN_UP = "signUp";
 
-    private Button btn_signIn, btn_signUp;
-    private CheckBox check_vibration;
+    private Button btnSignIn, btnSignUp;
+    private CheckBox checkVibration;
     private ConstraintLayout pop, settings, sign;
     private ImageView img_back, imgClose;
-    private SeekBar seek_music, seek_sound;
-    private Spinner spin_lang;
+    private SeekBar seekMusic, seekSound;
+    private Spinner spinLang;
 
     private SharedPreferences prefs;
     private Droid.Lang lang;
+    private Droid.Media media;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a_options);
 
-        btn_signIn = findViewById(R.id.opts_signIn);
-        btn_signUp = findViewById(R.id.opts_signUp);
-        check_vibration = findViewById(R.id.opts_check_vibration);
+        btnSignIn = findViewById(R.id.opts_signIn);
+        btnSignUp = findViewById(R.id.opts_signUp);
+        checkVibration = findViewById(R.id.opts_check_vibration);
         pop = findViewById(R.id.opts_pop);
         settings = findViewById(R.id.settings);
         sign = findViewById(R.id.opts_sign);
         img_back = findViewById(R.id.opts_back);
         imgClose = findViewById(R.id.opts_close);
-        seek_sound = findViewById(R.id.opts_seek_sound);
-        seek_music = findViewById(R.id.opts_seek_music);
-        spin_lang = findViewById(R.id.opts_spin_lang);
+        seekSound = findViewById(R.id.opts_seek_sound);
+        seekMusic = findViewById(R.id.opts_seek_music);
+        spinLang = findViewById(R.id.opts_spin_lang);
 
         init();
     }
@@ -68,15 +64,16 @@ public class A_Options extends Droid.BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        showPop(false);
+        hidePop();
     }
 
     private  void init() {
         prefs = getSharedPreferences(PREF_CONFIG, MODE_PRIVATE);
-        seek_sound.setProgress(prefs.getInt(SOUND, 100));
-        seek_music.setProgress(prefs.getInt(MUSIC, 100));
-        spin_lang.setSelection(Droid.Lang.getLang());
-        check_vibration.setChecked(prefs.getBoolean(VIBRATION, true));
+        media = Droid.Media.get();
+        seekMusic.setProgress(media.getMusicVolume());
+        seekSound.setProgress(media.getSoundVolume());
+        spinLang.setSelection(Droid.Lang.getLang());
+        checkVibration.setChecked(prefs.getBoolean(VIBRATION, true));
         spinListen();
         seekListen();
         checkListen();
@@ -86,12 +83,12 @@ public class A_Options extends Droid.BaseActivity {
     }
 
     private void spinListen() {
-        spin_lang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinLang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position != Droid.Lang.getLang()) {
                     Droid.Lang.setLang(position);
-                    prefs.edit().putInt(LANGUAGE, position).apply();
+                    prefs.edit().putInt(Droid.Lang.LANGUAGE, position).apply();
                     setTextsLang();
                 }
             }
@@ -103,10 +100,12 @@ public class A_Options extends Droid.BaseActivity {
         SeekBar.OnSeekBarChangeListener seek_listener = new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (seekBar == seek_sound) {
-                    prefs.edit().putInt(SOUND, progress).apply();
-                } else if (seekBar == seek_music) {
-                    prefs.edit().putInt(MUSIC, progress).apply();
+                if (seekBar == seekMusic) {
+                    media.setMusicVolume(progress);
+                    prefs.edit().putInt(Droid.Media.MUSIC, progress).apply();
+                } else if (seekBar == seekSound) {
+                    media.setSoundVolume(progress);
+                    prefs.edit().putInt(Droid.Media.SOUND, progress).apply();
                 }
             }
             @Override
@@ -114,13 +113,13 @@ public class A_Options extends Droid.BaseActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) { }
         };
-        seek_sound.setOnSeekBarChangeListener(seek_listener);
-        seek_music.setOnSeekBarChangeListener(seek_listener);
+        seekMusic.setOnSeekBarChangeListener(seek_listener);
+        seekSound.setOnSeekBarChangeListener(seek_listener);
     }
 
     private void checkListen() {
-        check_vibration.setOnCheckedChangeListener((v, isChecked) -> {
-            if (v == check_vibration) {
+        checkVibration.setOnCheckedChangeListener((v, isChecked) -> {
+            if (v == checkVibration) {
                 prefs.edit().putBoolean(VIBRATION, isChecked).apply();
             }
         });
@@ -128,45 +127,42 @@ public class A_Options extends Droid.BaseActivity {
 
     private void clickListen(){
         View.OnClickListener clickListen = v -> {
+            media.playSound(Droid.Media.CLICK);
             if (v == img_back) {
                 finish();
             } else if(v == imgClose) {
-                showPop(false);
-            } else if (v == btn_signIn) {
+                hidePop();
+            } else if (v == btnSignIn) {
                 setFragment(new F_SignIn());
-            } else if(v == btn_signUp) {
+            } else if(v == btnSignUp) {
                 setFragment(new F_SignUp());
             }
         };
         img_back.setOnClickListener(clickListen);
         imgClose.setOnClickListener(clickListen);
-        btn_signIn.setOnClickListener(clickListen);
-        btn_signUp.setOnClickListener(clickListen);
+        btnSignIn.setOnClickListener(clickListen);
+        btnSignUp.setOnClickListener(clickListen);
     }
 
     private void setFragment(Fragment frg) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.opts_pop_frg, frg).commit();
-        showPop(true);
+        sign.setVisibility(GONE);
+        settings.setVisibility(GONE);
+        pop.setVisibility(VISIBLE);
+        imgClose.setVisibility(VISIBLE);
     }
 
-    private void showPop(boolean b) {
-        if(b) {
-            sign.setVisibility(GONE);
-            settings.setVisibility(GONE);
-            pop.setVisibility(VISIBLE);
-            imgClose.setVisibility(VISIBLE);
-        } else {
-            imgClose.setVisibility(GONE);
-            pop.setVisibility(GONE);
-            settings.setVisibility(VISIBLE);
-            sign.setVisibility(VISIBLE);
-        }
+    private void hidePop() {
+        imgClose.setVisibility(GONE);
+        pop.setVisibility(GONE);
+        settings.setVisibility(VISIBLE);
+        sign.setVisibility(VISIBLE);
     }
 
     private void initLangs() {
-        int enIndex = Droid.Lang.indexOf(ENGLISH),
-                esIndex = Droid.Lang.indexOf(SPANISH);
+        int enIndex = Droid.Lang.indexOf(Droid.Lang.ENGLISH),
+                esIndex = Droid.Lang.indexOf(Droid.Lang.SPANISH);
         lang = new Droid.Lang();
         lang.addText(SIGN_IN, enIndex, "Sign in");
         lang.addText(SIGN_IN, esIndex, "Ingresar");
@@ -176,8 +172,8 @@ public class A_Options extends Droid.BaseActivity {
     }
 
     private void setTextsLang() {
-        btn_signIn.setText(lang.getText(SIGN_IN));
-        btn_signUp.setText(lang.getText(SIGN_UP));
+        btnSignIn.setText(lang.getText(SIGN_IN));
+        btnSignUp.setText(lang.getText(SIGN_UP));
     }
 
 }

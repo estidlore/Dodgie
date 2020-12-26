@@ -8,8 +8,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import static com.blieve.dodgie.util.Droid.SCREEN_H;
-import static com.blieve.dodgie.util.Droid.SCREEN_W;
 import static java.lang.System.nanoTime;
 import static java.lang.Thread.sleep;
 
@@ -32,8 +30,8 @@ public abstract class SurfaceCanvas extends SurfaceView
         holder = getHolder();
         holder.addCallback(this);
         setFocusable(true);
-        originX = SCREEN_W / 2.0f;
-        originY = SCREEN_H / 2.0f;
+        originX = Droid.UI.SCREEN_W / 2.0f;
+        originY = Droid.UI.SCREEN_H / 2.0f;
         res = getResources();
     }
 

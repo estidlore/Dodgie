@@ -27,14 +27,16 @@ public class F_Mode extends Fragment {
 
     private final String initLvl = "initLvl";
 
-    private String[] modesText;
-    private Droid.Lang lang;
     private ImageView imgLvlMinus, imgLvlPlus, imgPlay;
     private Intent _game;
-    private ListView list;
     private TextView txtCostCoins, txtCostDiamonds, txtHighLvl, txtHighScore, txtInitLvl,
             txtInitLvlValue;
     private TxtAdapter txtAdapter;
+
+    private String[] modesText;
+    private Droid.Lang lang;
+    private ListView list;
+    private Droid.Media media;
 
     private int costCoins, costDiamonds, highLvl, highScore, initLvlValue, mode;
 
@@ -69,6 +71,7 @@ public class F_Mode extends Fragment {
         modesText = new String[modes.length];
         txtAdapter = new TxtAdapter(getContext(), R.layout.f_mode_list_item, modesText);
         list.setAdapter(txtAdapter);
+        media = Droid.Media.get();
         selectMode(0);
         clickListen();
         itemClickListen();
@@ -77,6 +80,7 @@ public class F_Mode extends Fragment {
 
     private void clickListen() {
         View.OnClickListener clickListen = v -> {
+            media.playSound(Droid.Media.CLICK);
             if(v == imgLvlMinus) {
                 //if(initLvl > 1) {
                     initLvlValue--;
@@ -105,6 +109,7 @@ public class F_Mode extends Fragment {
     private void itemClickListen() {
         AdapterView.OnItemClickListener itemClickListen = (parent, view, position, id) -> {
             if(position != txtAdapter.getSelection()) {
+                media.playSound(Droid.Media.CLICK);
                 selectMode(position);
             }
         };
@@ -142,8 +147,8 @@ public class F_Mode extends Fragment {
     }
 
     private void initLangs() {
-        int enIndex = Droid.Lang.indexOf(A_Options.ENGLISH),
-                esIndex = Droid.Lang.indexOf(A_Options.SPANISH);
+        int enIndex = Droid.Lang.indexOf(Droid.Lang.ENGLISH),
+                esIndex = Droid.Lang.indexOf(Droid.Lang.SPANISH);
         lang = new Droid.Lang();
         // Initial lvl
         String initLvl = "initLvl";

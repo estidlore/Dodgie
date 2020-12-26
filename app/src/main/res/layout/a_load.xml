@@ -2,10 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/load"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_bg"
     tools:context=".activity.A_Load"
     tools:ignore="MissingConstraints" >
 
@@ -16,22 +14,14 @@
         app:srcCompat="@drawable/ic_blieve"
         style="@style/rel" />
 
-    <ImageView
+    <ProgressBar
         android:id="@+id/load_bar"
         app:layout_constraintWidth_percent="0.5"
         app:layout_constraintHeight_percent="0.03"
-        android:background="#fff"
-        style="@style/rel"
+        style="@style/progress_bar"
+        android:progress="5"
+        android:max="10"
+        android:progressDrawable="@drawable/ui_green_progress"
         app:layout_constraintVertical_bias="0.9" />
-
-    <ImageView
-        android:id="@+id/load_advance"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintWidth_percent="0.5"
-        app:layout_constraintHeight_percent="0.03"
-        android:background="#f80"
-        app:layout_constraintTop_toTopOf="@+id/load_bar"
-        app:layout_constraintStart_toStartOf="@id/load_bar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,17 +13,14 @@
     <style name="AppTheme" parent="@style/Theme.AppCompat.NoActionBar">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@null</item>
+        <item name="android:windowBackground">@drawable/ui_window_bg</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowNoTitle">true</item>
-        <!--<item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
-        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
-        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>-->
     </style>
 
-    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/ui_splash_bg</item>
     </style>
 
     <style name="FadeTransition">
@@ -90,7 +87,7 @@
     </style>
 
     <style name="img.ui" parent="img">
-        <item name="layout_constraintWidth_percent">0.04</item>
+        <item name="layout_constraintWidth_percent">0.05</item>
     </style>
 
     <style name="img.big" parent="img">
@@ -121,6 +118,15 @@
         <item name="layout_constraintDimensionRatio">1</item>
     </style>
 
+    <style name="progress_bar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="layout_constraintTop_toTopOf">parent</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
+        <item name="layout_constraintLeft_toLeftOf">parent</item>
+        <item name="layout_constraintRight_toRightOf">parent</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+    </style>
+
     <style name="txt">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">#FFFFFF</item>
@@ -146,6 +152,15 @@
     <style name="txt.constraint.wrap">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Widget.AppTheme.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="Widget.AppTheme.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
 
 </resources>

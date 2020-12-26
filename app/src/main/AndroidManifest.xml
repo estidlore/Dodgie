@@ -20,10 +20,11 @@
         android:theme="@style/AppTheme">
         <!-- MAIN ACTIVITIES -->
         <activity
-            android:name=".activity.A_Load"
+            android:name=".activity.A_Splash"
             android:configChanges="orientation"
             android:noHistory="true"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,14 +32,18 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.A_Load"
+            android:configChanges="orientation"
+            android:noHistory="true"
+            android:screenOrientation="landscape" />
+        <activity
             android:name=".activity.A_Home"
             android:configChanges="orientation"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.A_Game"
             android:configChanges="orientation"
-            android:screenOrientation="landscape" />
-        <!-- SUB MENUS -->
+            android:screenOrientation="landscape" /> <!-- SUB MENUS -->
         <activity
             android:name=".activity.A_Style"
             android:configChanges="orientation"

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,12 +22,14 @@ import com.blieve.dodgie.util.Droid;
 
 public class A_Game extends Droid.BaseActivity {
 
+    private ImageView[] arrow_imgs;
     private ConstraintLayout layout, options, resume, settings;
     private ImageView pause_img, play_img, back_img;
-    private TextView score_txt, level_txt, coins_txt, diamonds_txt;
     private SeekBar seek_sound, seek_music;
-    private ImageView[] arrow_imgs;
+    private TextView score_txt, level_txt, coins_txt, diamonds_txt;
+
     private ControlGame control;
+    private Droid.Media media;
     private SharedPreferences prefs;
     private Vibrator vibrator;
 
@@ -72,14 +75,14 @@ public class A_Game extends Droid.BaseActivity {
     }
 
     public void init() {
-        control.init();
-        GameStats stats = control.stats();
-        stats.setInitLvl(getIntent().getIntExtra(GameStats.INIT_LVL, 1));
-        stats.setMode(getIntent().getIntExtra(GameStats.MODE, 0));
+        int initLvl = getIntent().getIntExtra(GameStats.INIT_LVL, 1),
+            mode = getIntent().getIntExtra(GameStats.MODE, 0);
+        control.init(initLvl, mode);
 
+        media = Droid.Media.get();
         prefs = getSharedPreferences(A_Options.PREF_CONFIG, MODE_PRIVATE);
-        seek_sound.setProgress(prefs.getInt(A_Options.SOUND, 100));
-        seek_music.setProgress(prefs.getInt(A_Options.MUSIC, 100));
+        seek_music.setProgress(media.getMusicVolume());
+        seek_sound.setProgress(media.getSoundVolume());
         boolean vibrate = prefs.getBoolean(A_Options.VIBRATION, true);
         if(vibrate) vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         if(control.stats().mode() == 3) {
@@ -146,10 +149,12 @@ public class A_Game extends Droid.BaseActivity {
         SeekBar.OnSeekBarChangeListener seek_listener = new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (seekBar == seek_sound) {
-                    prefs.edit().putInt(A_Options.SOUND, progress).apply();
-                } else if (seekBar == seek_music) {
-                    prefs.edit().putInt(A_Options.MUSIC, progress).apply();
+                if (seekBar == seek_music) {
+                    media.setMusicVolume(progress);
+                    prefs.edit().putInt(Droid.Media.MUSIC, progress).apply();
+                } else if (seekBar == seek_sound) {
+                    media.setSoundVolume(progress);
+                    prefs.edit().putInt(Droid.Media.SOUND, progress).apply();
                 }
             }
             @Override
@@ -162,23 +167,22 @@ public class A_Game extends Droid.BaseActivity {
     }
 
     private void callListen() {
-        control.gameOverListen().setOnCallListener(() -> {
-            runOnUiThread(() -> {
-                control.stop();
-                if(vibrator != null) Droid.vibrate(vibrator, 100);
-                pause_img.setVisibility(View.GONE);
-                settings.setVisibility(View.GONE);
-                resume.setVisibility(View.VISIBLE);
-                options.setVisibility(View.VISIBLE);
-                /* Resume */
-                GameStats stats = control.stats();
-                score_txt.setText(String.valueOf(stats.score()));
-                level_txt.setText(String.valueOf(stats.lvl()));
-                coins_txt.setText(String.valueOf(stats.coins()));
-                diamonds_txt.setText(String.valueOf(stats.gems()));
-
-            });
-        });
+        control.gameOverListen().setOnCallListener(() -> runOnUiThread(() -> {
+            Log.d("debug", "runOnUiThread() start");
+            control.stop();
+            if(vibrator != null) Droid.vibrate(vibrator, 100);
+            pause_img.setVisibility(View.GONE);
+            settings.setVisibility(View.GONE);
+            resume.setVisibility(View.VISIBLE);
+            options.setVisibility(View.VISIBLE);
+            /* Resume */
+            GameStats stats = control.stats();
+            score_txt.setText(String.valueOf(stats.score()));
+            level_txt.setText(String.valueOf(stats.lvl()));
+            coins_txt.setText(String.valueOf(stats.coins()));
+            diamonds_txt.setText(String.valueOf(stats.gems()));
+            Log.d("debug", "runOnUiThread() end");
+        }));
     }
 
     public void play() {

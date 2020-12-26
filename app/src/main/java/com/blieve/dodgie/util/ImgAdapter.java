@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
@@ -47,7 +48,12 @@ public class ImgAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView img = new ImageView(ctx);
+        final ImageView img;
+        if (convertView == null) {
+            img = new ImageView(ctx);
+        } else {
+            img = (ImageView) convertView;
+        }
         img.setImageBitmap(bmps[position]);
         img.setLayoutParams(imgParams);
         Droid.UI.setPadding(img, imgPadding);

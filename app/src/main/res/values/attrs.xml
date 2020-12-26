@@ -26,5 +26,9 @@
     <dimen name="p4_size">7sp</dimen>
     <dimen name="p5_size">5sp</dimen>
     <dimen name="p6_size">3sp</dimen>
+    <declare-styleable name="FullscreenAttrs">
+        <attr name="fullscreenBackgroundColor" format="color" />
+        <attr name="fullscreenTextColor" format="color" />
+    </declare-styleable>
 
 </resources>

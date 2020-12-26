@@ -17,6 +17,8 @@ public class A_Info extends Droid.BaseActivity {
     private ImageView back_img, blieve_img, game_img;
     private TextView about_txt;
 
+    private Droid.Media media;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,12 +32,15 @@ public class A_Info extends Droid.BaseActivity {
     }
 
     private void init() {
+        media = Droid.Media.get();
+
         clickListen();
         initLangs();
     }
 
     private void clickListen() {
         View.OnClickListener onClickListener = v -> {
+            media.playSound(Droid.Media.CLICK);
             if(v == back_img) {
                 finish();
             } else if(v == blieve_img) {
@@ -53,8 +58,8 @@ public class A_Info extends Droid.BaseActivity {
 
     private void initLangs() {
         String about = "about";
-        int enIndex = Droid.Lang.indexOf(A_Options.ENGLISH),
-                esIndex = Droid.Lang.indexOf(A_Options.SPANISH);
+        int enIndex = Droid.Lang.indexOf(Droid.Lang.ENGLISH),
+                esIndex = Droid.Lang.indexOf(Droid.Lang.SPANISH);
         Droid.Lang lang = new Droid.Lang();
         lang.addText(about, enIndex,
                 "Development and design:\n" +
