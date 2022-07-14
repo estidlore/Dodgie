@@ -1,18 +1,20 @@
 package com.blieve.dodgie.util;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.blieve.dodgie.R;
+
 public class TxtAdapter extends BaseAdapter {
 
     private final String[] txts;
     private final Context ctx;
     private final LayoutInflater inflater;
+    private final ViewGroup.LayoutParams params;
     private final int resource;
 
     private int selection;
@@ -23,7 +25,7 @@ public class TxtAdapter extends BaseAdapter {
         this.txts = txts;
 
         this.inflater = LayoutInflater.from(ctx);
-
+        this.params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         this.selection = -1;
     }
 
@@ -44,28 +46,32 @@ public class TxtAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Log.d("debug", "getView() start");
-        final TextView text;
+        ViewHolder holder;
         if (convertView == null) {
-            text = (TextView) inflater.inflate(resource, parent, false);
+            convertView = inflater.inflate(resource, parent, false);
+            holder = new ViewHolder();
+            holder.text = convertView.findViewById(R.id.mode_list_item);
+            convertView.setTag(holder);
         } else {
-            text = (TextView) convertView;
+            holder = (ViewHolder) convertView.getTag();
         }
-        text.setText(txts[position]);
-        text.setBackgroundColor(position == selection ? 0x88888888 : 0x00000000);
-        Log.d("debug", "getView() end");
-        return text;
+        holder.text.setText(txts[position]);
+        holder.text.setBackgroundColor(position == selection ? 0x88888888 : 0x00000000);
+
+        return convertView;
     }
 
     public final void setSelection(int selection) {
-        Log.d("debug", "setSelection() start");
         this.selection = selection;
         notifyDataSetChanged();
-        Log.d("debug", "setSelection() end");
     }
 
     public final int getSelection() {
         return selection;
+    }
+
+    private static class ViewHolder {
+        TextView text;
     }
 
 }

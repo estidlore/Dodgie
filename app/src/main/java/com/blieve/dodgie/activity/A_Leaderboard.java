@@ -7,11 +7,9 @@ import android.widget.ImageView;
 import com.blieve.dodgie.R;
 import com.blieve.dodgie.util.Droid;
 
-public class A_Leaderboard extends Droid.BaseActivity {
+public class A_Leaderboard extends BaseActivity {
 
     private ImageView img_back;
-
-    private Droid.Media media;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,17 +22,17 @@ public class A_Leaderboard extends Droid.BaseActivity {
     }
 
     private void init() {
-        media = Droid.Media.get();
-
         clickListen();
     }
 
     private void clickListen() {
         View.OnClickListener clickListener = v -> {
-            media.playSound(Droid.Media.CLICK);
             if (v == img_back) {
+                media.play(Droid.Media.CLOSE);
                 finish();
+                return;
             }
+            media.play(Droid.Media.CLICK);
         };
         img_back.setOnClickListener(clickListener);
     }

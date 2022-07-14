@@ -20,7 +20,7 @@ import com.blieve.dodgie.model.GameStats;
 import com.blieve.dodgie.model.User;
 import com.blieve.dodgie.util.Droid;
 
-public class A_Game extends Droid.BaseActivity {
+public class A_Game extends BaseActivity {
 
     private ImageView[] arrow_imgs;
     private ConstraintLayout layout, options, resume, settings;
@@ -29,7 +29,6 @@ public class A_Game extends Droid.BaseActivity {
     private TextView score_txt, level_txt, coins_txt, diamonds_txt;
 
     private ControlGame control;
-    private Droid.Media media;
     private SharedPreferences prefs;
     private Vibrator vibrator;
 
@@ -59,6 +58,7 @@ public class A_Game extends Droid.BaseActivity {
         init();
     }
 
+    @Override
     public void onPause() {
         super.onPause();
         pause();
@@ -79,10 +79,9 @@ public class A_Game extends Droid.BaseActivity {
             mode = getIntent().getIntExtra(GameStats.MODE, 0);
         control.init(initLvl, mode);
 
-        media = Droid.Media.get();
         prefs = getSharedPreferences(A_Options.PREF_CONFIG, MODE_PRIVATE);
         seek_music.setProgress(media.getMusicVolume());
-        seek_sound.setProgress(media.getSoundVolume());
+        seek_sound.setProgress(media.getFxVolume());
         boolean vibrate = prefs.getBoolean(A_Options.VIBRATION, true);
         if(vibrate) vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         if(control.stats().mode() == 3) {
@@ -122,9 +121,12 @@ public class A_Game extends Droid.BaseActivity {
     private void clickListen() {
         View.OnClickListener clickListener = v -> {
             if (v == pause_img) {
+                media.play(Droid.Media.CLICK);
                 pause();
             } else if (v == back_img) {
+                media.play(Droid.Media.CLOSE);
                 if(control.play()) User.get().update(control.stats());
+                media.setMusicPanning(0);
                 finish();
             } else if (v == play_img) {
                 if(!control.play()) {
@@ -153,7 +155,7 @@ public class A_Game extends Droid.BaseActivity {
                     media.setMusicVolume(progress);
                     prefs.edit().putInt(Droid.Media.MUSIC, progress).apply();
                 } else if (seekBar == seek_sound) {
-                    media.setSoundVolume(progress);
+                    media.setFxVolume(progress);
                     prefs.edit().putInt(Droid.Media.SOUND, progress).apply();
                 }
             }
@@ -167,25 +169,28 @@ public class A_Game extends Droid.BaseActivity {
     }
 
     private void callListen() {
-        control.gameOverListen().setOnCallListener(() -> runOnUiThread(() -> {
-            Log.d("debug", "runOnUiThread() start");
-            control.stop();
-            if(vibrator != null) Droid.vibrate(vibrator, 100);
-            pause_img.setVisibility(View.GONE);
-            settings.setVisibility(View.GONE);
-            resume.setVisibility(View.VISIBLE);
-            options.setVisibility(View.VISIBLE);
-            /* Resume */
-            GameStats stats = control.stats();
-            score_txt.setText(String.valueOf(stats.score()));
-            level_txt.setText(String.valueOf(stats.lvl()));
-            coins_txt.setText(String.valueOf(stats.coins()));
-            diamonds_txt.setText(String.valueOf(stats.gems()));
-            Log.d("debug", "runOnUiThread() end");
-        }));
+        control.gameOverListen().setOnCallListener(() -> {
+            if (vibrator != null) Droid.vibrate(vibrator, 100);
+            runOnUiThread(() -> {
+                Log.d("debug", "runOnUiThread() start");
+                control.stop();
+                pause_img.setVisibility(View.GONE);
+                settings.setVisibility(View.GONE);
+                resume.setVisibility(View.VISIBLE);
+                options.setVisibility(View.VISIBLE);
+                /* Resume */
+                GameStats stats = control.stats();
+                score_txt.setText(String.valueOf(stats.score()));
+                level_txt.setText(String.valueOf(stats.lvl()));
+                coins_txt.setText(String.valueOf(stats.coins()));
+                diamonds_txt.setText(String.valueOf(stats.gems()));
+                Log.d("debug", "runOnUiThread() end");
+            });
+        });
     }
 
     public void play() {
+        media.play(Droid.Media.FADE);
         if(control.play()) control.resume();
         else control.start();
         options.setVisibility(View.GONE);

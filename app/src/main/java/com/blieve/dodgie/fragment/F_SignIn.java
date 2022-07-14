@@ -50,7 +50,7 @@ public class F_SignIn extends Fragment {
 
     private void clickListen() {
         View.OnClickListener onclick = v -> {
-            media.playSound(Droid.Media.CLICK);
+            media.play(Droid.Media.CLICK);
             if(v == btn_signIn) {
                 signIn();
             }

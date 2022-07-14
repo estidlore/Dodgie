@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,13 +18,12 @@ import com.blieve.dodgie.model.User;
 import com.blieve.dodgie.R;
 import com.blieve.dodgie.util.Droid;
 
-public class A_Home extends Droid.BaseActivity {
+public class A_Home extends BaseActivity {
 
     private ConstraintLayout pop;
     private ControlHome control;
     private ImageView imgClose, imgInfo, imgLeaderBoard, imgMode, imgOptions, imgSkin;
     private Intent _info, _leaderBoard, _options, _skin;
-    private Droid.Media media;
     private TextView txtCoins, txtGems;
 
     @Override
@@ -70,17 +68,18 @@ public class A_Home extends Droid.BaseActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.home_pop_frg, new F_Mode()).commit();
 
-        media = Droid.Media.get();
-
         clickListener();
     }
 
     private void clickListener() {
         View.OnClickListener clickListen = v -> {
-            media.playSound(Droid.Media.CLICK);
             if(v == imgClose) {
+                media.play(Droid.Media.CLOSE);
                 closePop();
-            } else if(v == imgMode) {
+                return;
+            }
+            media.play(Droid.Media.CLICK);
+            if(v == imgMode) {
                 imgMode.setVisibility(View.GONE);
                 imgSkin.setVisibility(View.GONE);
                 pop.setVisibility(View.VISIBLE);

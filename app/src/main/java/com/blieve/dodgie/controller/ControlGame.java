@@ -9,8 +9,9 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
 
@@ -30,6 +31,7 @@ public class ControlGame extends View {
 
     private final ArrayList<Block> blocks;
     private final Droid.Listen gameOverListen;
+    private final Droid.Media media;
     private final GameStats stats;
     private final Player player;
     private final Update update;
@@ -64,6 +66,7 @@ public class ControlGame extends View {
         keys = new boolean[3];
         blocks = new ArrayList<>();
         gameOverListen = new Droid.Listen();
+        media = Droid.Media.get();
 
         originX = Droid.UI.SCREEN_W / 2.0f;
         originY = Droid.UI.SCREEN_H / 2.0f;
@@ -201,6 +204,8 @@ public class ControlGame extends View {
     }
 
     private void addBlocks() {
+        media.setMusicPanning(player.x() / Droid.UI.SCREEN_W);
+        media.play(Droid.Media.BLOCK);
         if(stats.mode() == 1) { // If mode is party
             addBlock((float) ((Math.random() - 0.5) * (CELLS_X - 1)), -y, 0, speed);
             addBlock((float) ((Math.random() - 0.5) * (CELLS_X - 1)), y, 0, -speed);
@@ -236,6 +241,7 @@ public class ControlGame extends View {
         if(stats.points() % GameStats.PTS_PER_LVL == 0) {
             stats.addLvl(1);
             stats.addGems(stats.lvl());
+            media.play(Droid.Media.FADE);
             return true;
         }
         return false;

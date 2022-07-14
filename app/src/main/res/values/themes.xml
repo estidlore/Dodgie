@@ -1,13 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme.Fullscreen" parent="AppTheme">
-        <item name="android:actionBarStyle">@style/Widget.AppTheme.ActionBar.Fullscreen</item>
+    <style name="AppTheme" parent="@style/Theme.AppCompat.NoActionBar">
+        <!-- FULLSCREEN -->
+        <item name="android:windowBackground">@drawable/ui_window_bg</item>
+        <item name="android:windowActionBar">false</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <!-- DARK -->
+        <item name="android:textColor">@color/color_txt</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="ThemeOverlay.Dodgie.FullscreenContainer" parent="">
-        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
-        <item name="fullscreenTextColor">@color/light_blue_A200</item>
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/ui_splash_bg</item>
     </style>
+
+    <style name="Light">
+        <item name="android:textColor">#111111</item>
+    </style>
+
 </resources>

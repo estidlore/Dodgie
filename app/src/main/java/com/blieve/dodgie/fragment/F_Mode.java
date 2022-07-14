@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.blieve.dodgie.R;
 import com.blieve.dodgie.activity.A_Game;
-import com.blieve.dodgie.activity.A_Options;
 import com.blieve.dodgie.model.GameStats;
 import com.blieve.dodgie.model.User;
 import com.blieve.dodgie.util.Droid;
@@ -38,7 +37,7 @@ public class F_Mode extends Fragment {
     private ListView list;
     private Droid.Media media;
 
-    private int costCoins, costDiamonds, highLvl, highScore, initLvlValue, mode;
+    private int costCoins, costDiamonds, highLvl, highScore, initLvlValue, mode, lastLang;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,7 +62,9 @@ public class F_Mode extends Fragment {
     public void onResume() {
         super.onResume();
         setModeValues();
-        setTextLangs();
+        if (lastLang != Droid.Lang.getLang()) {
+            setTextLangs();
+        }
     }
 
     private void init() {
@@ -80,17 +81,13 @@ public class F_Mode extends Fragment {
 
     private void clickListen() {
         View.OnClickListener clickListen = v -> {
-            media.playSound(Droid.Media.CLICK);
+            media.play(Droid.Media.CLICK);
             if(v == imgLvlMinus) {
-                //if(initLvl > 1) {
-                    initLvlValue--;
-                    setCosts();
-                //}
+                initLvlValue--;
+                setCosts();
             } else if (v == imgLvlPlus) {
-                //if(initLvl < highLvl) {
-                    initLvlValue++;
-                    setCosts();
-                //}
+                initLvlValue++;
+                setCosts();
             } else if (v == imgPlay) {
                 if (User.get().subtractCost(costCoins, costDiamonds)) {
                     _game.putExtra(GameStats.INIT_LVL, initLvlValue);
@@ -109,7 +106,7 @@ public class F_Mode extends Fragment {
     private void itemClickListen() {
         AdapterView.OnItemClickListener itemClickListen = (parent, view, position, id) -> {
             if(position != txtAdapter.getSelection()) {
-                media.playSound(Droid.Media.CLICK);
+                media.play(Droid.Media.CLICK);
                 selectMode(position);
             }
         };
@@ -151,25 +148,22 @@ public class F_Mode extends Fragment {
                 esIndex = Droid.Lang.indexOf(Droid.Lang.SPANISH);
         lang = new Droid.Lang();
         // Initial lvl
-        String initLvl = "initLvl";
         lang.addText(initLvl, enIndex, "Initial level");
         lang.addText(initLvl, esIndex, "Nivel inicial");
         // Modes
-        String clasic = modes[0],
-                party = modes[1],
-                overturned = modes[2],
-                gravity = modes[3];
-        lang.addText(clasic, enIndex, "Clasic");
-        lang.addText(clasic, esIndex, "Clásico");
-        lang.addText(party, enIndex, "Party");
-        lang.addText(party, esIndex, "Fiesta");
-        lang.addText(overturned, enIndex, "Overturned");
-        lang.addText(overturned, esIndex, "De cabeza");
-        lang.addText(gravity, enIndex, "Anti-gravity");
-        lang.addText(gravity, esIndex, "Antigravedad");
+        lang.addText(modes[0], enIndex, "Clasic");
+        lang.addText(modes[0], esIndex, "Clásico");
+        lang.addText(modes[1], enIndex, "Party");
+        lang.addText(modes[1], esIndex, "Fiesta");
+        lang.addText(modes[2], enIndex, "Overturned");
+        lang.addText(modes[2], esIndex, "De cabeza");
+        lang.addText(modes[3], enIndex, "Anti-gravity");
+        lang.addText(modes[3], esIndex, "Antigravedad");
+        setTextLangs();
     }
 
     private void setTextLangs() {
+        lastLang = Droid.Lang.getLang();
         txtInitLvl.setText(lang.getText(initLvl));
         for(int i = modes.length - 1; i >= 0; i--) {
             modesText[i] = lang.getText(modes[i]);

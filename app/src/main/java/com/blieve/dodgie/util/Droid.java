@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -32,6 +31,7 @@ import java.util.Map;
 import static android.graphics.Bitmap.Config.ARGB_8888;
 import static android.graphics.Bitmap.createBitmap;
 import static java.lang.Math.abs;
+import static java.lang.Math.floorDiv;
 
 /**
  * @author estidlore
@@ -45,7 +45,7 @@ public class Droid {
         } else v.vibrate(ms);
     }
 
-    public static class BaseActivity extends AppCompatActivity {
+    public static class FullScreenActivity extends AppCompatActivity {
 
         @SuppressLint("InlinedApi")
         private static final int UI_OPTIONS = View.SYSTEM_UI_FLAG_LOW_PROFILE
@@ -61,21 +61,12 @@ public class Droid {
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             getWindow().getDecorView().getRootView().setPadding(0, 0,
                     UI.NAV_BAR_SIZE_RIGHT, UI.NAV_BAR_SIZE_BOTTOM);
-            getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-                @Override
-                public void onSystemUiVisibilityChange(int visibility) {
-                    if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                        hideSystemUI();
-                    }
+            getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(visibility -> {
+                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                    hideSystemUI();
                 }
             });
             hideSystemUI();
-        }
-
-        @Override
-        protected void onPause() {
-            super.onPause();
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
 
         private void hideSystemUI() {
@@ -98,7 +89,7 @@ public class Droid {
         }
 
         public static boolean rectWithCircle(float circleX, float circleY, float radius,
-                float x, float y, float width, float height) {
+                                             float x, float y, float width, float height) {
             float dx = abs(circleX - x) - width / 2,
                     dy = abs(circleY - y) - height / 2;
             if (dx > radius || dy > radius) return false;
@@ -128,6 +119,26 @@ public class Droid {
                 stream.write(data.getBytes());
                 stream.close();
             } catch (IOException e) { e.printStackTrace(); }
+        }
+    }
+
+    public static class Img {
+        public static Bitmap drawToBmp(Drawable drawable, int width, int height) {
+            if (width <= 0) width = 1;
+            if (height <= 0) height = 1;
+            Bitmap bmp = createBitmap(width, height, ARGB_8888);
+            Canvas cvs = new Canvas(bmp);
+            drawable.setBounds(0, 0, width, height);
+            drawable.draw(cvs);
+            return bmp;
+        }
+
+        public static Bitmap bmpMerge(Bitmap bmp1, Bitmap bmp2) {
+            Bitmap result = createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
+            Canvas canvas = new Canvas(result);
+            canvas.drawBitmap(bmp1, 0, 0, null);
+            canvas.drawBitmap(bmp2, 0, 0, null);
+            return result;
         }
     }
 
@@ -179,24 +190,6 @@ public class Droid {
 
     }
 
-    public static class Img {
-        public static Bitmap drawToBmp(Drawable drawable, int width, int height) {
-            Bitmap bmp = createBitmap(width, height, ARGB_8888);
-            Canvas cvs = new Canvas(bmp);
-            drawable.setBounds(0, 0, width, height);
-            drawable.draw(cvs);
-            return bmp;
-        }
-
-        public static Bitmap bmpMerge(Bitmap bmp1, Bitmap bmp2) {
-            Bitmap result = createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
-            Canvas canvas = new Canvas(result);
-            canvas.drawBitmap(bmp1, 0, 0, null);
-            canvas.drawBitmap(bmp2, 0, 0, null);
-            return result;
-        }
-    }
-
     public static class Listen {
         private OnCallListen listen;
 
@@ -226,70 +219,105 @@ public class Droid {
 
         public static final String
                 SOUND = "sond",
-                MUSIC = "musc",
-                CLICK = "clck",
-                CLOSE = "cls";
+                MUSIC = "musc";
 
-        private final HashMap<String, MediaPlayer> musics, sounds;
-        private final int maxVolume;
+        public final static int MAX_VOLUME = 100,
+                BASE = 0,
+                CLICK = 1,
+                CLOSE = 2,
+                FADE = 3,
+                BLOCK = 4;
 
-        private int musicVolume, soundVolume;
+        private MediaPlayer[] medias;
+        private boolean[] types;
+        private int musicVolume, fxVolume;
+        private float leftMusicVol, rightMusicVol,
+                leftFxVol, rightFxVol,
+                musicPanning, fxPanning;
 
-        private Media() {
-            this.musics = new HashMap<>();
-            this.sounds = new HashMap<>();
-            maxVolume = 100;
+        private Media() {}
+
+        public void init(int poolSize) {
+            medias = new MediaPlayer[poolSize];
+            types = new boolean[poolSize];
         }
 
-        public void addMusic(Context ctx, String name, int resId) {
-            musics.put(name, MediaPlayer.create(ctx, resId));
+        public void addFx(Context ctx, int name, int resId) {
+            add(ctx, name, resId, true);
         }
 
-        public void addSound(Context ctx, String name, int resId) {
-            sounds.put(name, MediaPlayer.create(ctx, resId));
+        public void addMusic(Context ctx, int name, int resId) {
+            add(ctx, name, resId, false);
         }
 
-        public void setMusicVolume(int volume) {
-            musicVolume = volume;
-            float realVolume = (float) volume / maxVolume;
-            for (MediaPlayer i : musics.values()) {
-                i.setVolume(realVolume, realVolume);
-            }
+        private void add(Context ctx, int name, int resId, boolean isFx) {
+            medias[name] = MediaPlayer.create(ctx, resId);
+            types[name] = isFx;
+            if (!isFx) getMedia(name).setLooping(true);
         }
 
-        public void setSoundVolume(int volume) {
-            soundVolume = volume;
-            float realVolume = (float) volume / maxVolume;
-            Log.d("debug", "setSoundVolume(" + volume + ") : " + realVolume);
-            for (MediaPlayer i : sounds.values()) {
-                i.setVolume(realVolume, realVolume);
-            }
+        private MediaPlayer getMedia(int name) {
+            return medias[name];
+        }
+
+        public int getFxVolume() {
+            return fxVolume;
         }
 
         public int getMusicVolume() {
             return musicVolume;
         }
 
-        public int getSoundVolume() {
-            return soundVolume;
+        public void setFxVolume(int volume) {
+            fxVolume = volume;
+            setFxPanning(fxPanning);
         }
 
-        public int getMaxVolume() {
-            return maxVolume;
+        public void setMusicVolume(int volume) {
+            musicVolume = volume;
+            setMusicPanning(musicPanning);
         }
 
-        public void playMusic(String name) {
-            if(musicVolume > 0) {
-                MediaPlayer mp = musics.get(name);
-                if(mp != null) mp.start();
+        public void setFxPanning(float panning) {
+            fxPanning = Math.min(Math.max(panning, -0.5f), 0.5f);
+            float diff = fxPanning * 0.8f, baseVol = (float) fxVolume / MAX_VOLUME;
+            leftFxVol = baseVol * (0.6f - diff);
+            rightFxVol = baseVol * (0.6f + diff);
+            updateFxVolumes();
+        }
+
+        public void setMusicPanning(float panning) {
+            musicPanning = Math.min(Math.max(panning, -0.5f), 0.5f);
+            float diff = musicPanning * 0.8f, baseVol = (float) musicVolume / MAX_VOLUME;
+            leftMusicVol = baseVol * (0.6f - diff);
+            rightMusicVol = baseVol * (0.6f + diff);
+            updateMusicVolumes();
+        }
+
+        private void updateFxVolumes() {
+            for (int i = medias.length - 1; i >= 0; i--) {
+                if (types[i]) getMedia(i).setVolume(leftFxVol, rightFxVol);
             }
         }
 
-        public void playSound(String name) {
-            if(soundVolume > 0) {
-                MediaPlayer mp = sounds.get(name);
-                if(mp != null) mp.start();
+        private void updateMusicVolumes() {
+            for (int i = medias.length - 1; i >= 0; i--) {
+                if (!types[i]) getMedia(i).setVolume(leftMusicVol, rightMusicVol);
             }
+        }
+
+        public void play(int name) {
+            MediaPlayer mp = getMedia(name);
+            if(mp.isPlaying()) mp.stop();
+            mp.start();
+        }
+
+        public void pause(int name) {
+            getMedia(name).pause();
+        }
+
+        public void stop(int name) {
+            getMedia(name).stop();
         }
 
     }

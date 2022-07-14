@@ -13,7 +13,7 @@ import com.blieve.dodgie.model.User;
 import com.blieve.dodgie.R;
 import com.blieve.dodgie.util.Droid;
 
-public class A_Load extends Droid.BaseActivity {
+public class A_Load extends Droid.FullScreenActivity {
 
     private A_Load aLoad;
     private ProgressBar loadBar;
@@ -55,10 +55,14 @@ public class A_Load extends Droid.BaseActivity {
 
     private void initSounds() {
         Droid.Media media = Droid.Media.get();
-        media.setMusicVolume(prefConfig.getInt(Droid.Media.MUSIC, media.getMaxVolume()));
-        media.setSoundVolume(prefConfig.getInt(Droid.Media.SOUND, media.getMaxVolume()));
-
-        media.addSound(getApplicationContext(), Droid.Media.CLICK, R.raw.click);
+        media.init(5);
+        media.addMusic(getApplicationContext(), Droid.Media.BASE, R.raw.sky_base);
+        media.addFx(getApplicationContext(), Droid.Media.CLICK, R.raw.click1);
+        media.addFx(getApplicationContext(), Droid.Media.CLOSE, R.raw.click2);
+        media.addFx(getApplicationContext(), Droid.Media.FADE, R.raw.fade);
+        media.addFx(getApplicationContext(), Droid.Media.BLOCK, R.raw.bell_reverb);
+        media.setMusicVolume(prefConfig.getInt(Droid.Media.MUSIC, Droid.Media.MAX_VOLUME));
+        media.setFxVolume(prefConfig.getInt(Droid.Media.SOUND, Droid.Media.MAX_VOLUME));
     }
 
     private class AsyncLoad extends AsyncTask<Integer, Integer, String> {

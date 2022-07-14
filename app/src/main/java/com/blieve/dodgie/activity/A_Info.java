@@ -12,12 +12,10 @@ import com.blieve.dodgie.util.Droid;
 import static android.content.Intent.ACTION_VIEW;
 import static android.net.Uri.parse;
 
-public class A_Info extends Droid.BaseActivity {
+public class A_Info extends BaseActivity {
 
     private ImageView back_img, blieve_img, game_img;
     private TextView about_txt;
-
-    private Droid.Media media;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,18 +30,19 @@ public class A_Info extends Droid.BaseActivity {
     }
 
     private void init() {
-        media = Droid.Media.get();
-
         clickListen();
         initLangs();
     }
 
     private void clickListen() {
         View.OnClickListener onClickListener = v -> {
-            media.playSound(Droid.Media.CLICK);
             if(v == back_img) {
+                media.play(Droid.Media.CLOSE);
                 finish();
-            } else if(v == blieve_img) {
+                return;
+            }
+            media.play(Droid.Media.CLICK);
+            if(v == blieve_img) {
                 String page = "http://www.facebook.com/blieve_games/";
                 startActivity(new Intent(ACTION_VIEW, parse(page)));
             } else if(v == game_img) {

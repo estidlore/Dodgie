@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -14,14 +13,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.blieve.dodgie.R;
-import com.blieve.dodgie.fragment.F_SignIn;
-import com.blieve.dodgie.fragment.F_SignUp;
 import com.blieve.dodgie.util.Droid;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class A_Options extends Droid.BaseActivity {
+public class A_Options extends BaseActivity {
 
     public final static String
             PREF_CONFIG = "cnfg",
@@ -30,28 +27,27 @@ public class A_Options extends Droid.BaseActivity {
             SIGN_IN = "signIn",
             SIGN_UP = "signUp";
 
-    private Button btnSignIn, btnSignUp;
+    // private Button btnSignIn, btnSignUp;
     private CheckBox checkVibration;
-    private ConstraintLayout pop, settings, sign;
+    private ConstraintLayout pop, settings/*, sign*/;
     private ImageView img_back, imgClose;
     private SeekBar seekMusic, seekSound;
     private Spinner spinLang;
 
     private SharedPreferences prefs;
     private Droid.Lang lang;
-    private Droid.Media media;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a_options);
 
-        btnSignIn = findViewById(R.id.opts_signIn);
-        btnSignUp = findViewById(R.id.opts_signUp);
+        // btnSignIn = findViewById(R.id.opts_signIn);
+        // btnSignUp = findViewById(R.id.opts_signUp);
         checkVibration = findViewById(R.id.opts_check_vibration);
         pop = findViewById(R.id.opts_pop);
         settings = findViewById(R.id.settings);
-        sign = findViewById(R.id.opts_sign);
+        // sign = findViewById(R.id.opts_sign);
         img_back = findViewById(R.id.opts_back);
         imgClose = findViewById(R.id.opts_close);
         seekSound = findViewById(R.id.opts_seek_sound);
@@ -69,9 +65,8 @@ public class A_Options extends Droid.BaseActivity {
 
     private  void init() {
         prefs = getSharedPreferences(PREF_CONFIG, MODE_PRIVATE);
-        media = Droid.Media.get();
         seekMusic.setProgress(media.getMusicVolume());
-        seekSound.setProgress(media.getSoundVolume());
+        seekSound.setProgress(media.getFxVolume());
         spinLang.setSelection(Droid.Lang.getLang());
         checkVibration.setChecked(prefs.getBoolean(VIBRATION, true));
         spinListen();
@@ -87,6 +82,7 @@ public class A_Options extends Droid.BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position != Droid.Lang.getLang()) {
+                    media.play(Droid.Media.CLICK);
                     Droid.Lang.setLang(position);
                     prefs.edit().putInt(Droid.Lang.LANGUAGE, position).apply();
                     setTextsLang();
@@ -104,7 +100,7 @@ public class A_Options extends Droid.BaseActivity {
                     media.setMusicVolume(progress);
                     prefs.edit().putInt(Droid.Media.MUSIC, progress).apply();
                 } else if (seekBar == seekSound) {
-                    media.setSoundVolume(progress);
+                    media.setFxVolume(progress);
                     prefs.edit().putInt(Droid.Media.SOUND, progress).apply();
                 }
             }
@@ -119,6 +115,7 @@ public class A_Options extends Droid.BaseActivity {
 
     private void checkListen() {
         checkVibration.setOnCheckedChangeListener((v, isChecked) -> {
+            media.play(Droid.Media.CLICK);
             if (v == checkVibration) {
                 prefs.edit().putBoolean(VIBRATION, isChecked).apply();
             }
@@ -127,27 +124,31 @@ public class A_Options extends Droid.BaseActivity {
 
     private void clickListen(){
         View.OnClickListener clickListen = v -> {
-            media.playSound(Droid.Media.CLICK);
             if (v == img_back) {
+                media.play(Droid.Media.CLOSE);
                 finish();
             } else if(v == imgClose) {
+                media.play(Droid.Media.CLOSE);
                 hidePop();
-            } else if (v == btnSignIn) {
-                setFragment(new F_SignIn());
-            } else if(v == btnSignUp) {
-                setFragment(new F_SignUp());
+            } else {
+                media.play(Droid.Media.CLICK);
+                /*if (v == btnSignIn) {
+                    setFragment(new F_SignIn());
+                } else if(v == btnSignUp) {
+                    setFragment(new F_SignUp());
+                }*/
             }
         };
         img_back.setOnClickListener(clickListen);
         imgClose.setOnClickListener(clickListen);
-        btnSignIn.setOnClickListener(clickListen);
-        btnSignUp.setOnClickListener(clickListen);
+        /*btnSignIn.setOnClickListener(clickListen);
+        btnSignUp.setOnClickListener(clickListen);*/
     }
 
     private void setFragment(Fragment frg) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.opts_pop_frg, frg).commit();
-        sign.setVisibility(GONE);
+        // sign.setVisibility(GONE);
         settings.setVisibility(GONE);
         pop.setVisibility(VISIBLE);
         imgClose.setVisibility(VISIBLE);
@@ -157,7 +158,7 @@ public class A_Options extends Droid.BaseActivity {
         imgClose.setVisibility(GONE);
         pop.setVisibility(GONE);
         settings.setVisibility(VISIBLE);
-        sign.setVisibility(VISIBLE);
+        // sign.setVisibility(VISIBLE);
     }
 
     private void initLangs() {
@@ -172,8 +173,8 @@ public class A_Options extends Droid.BaseActivity {
     }
 
     private void setTextsLang() {
-        btnSignIn.setText(lang.getText(SIGN_IN));
-        btnSignUp.setText(lang.getText(SIGN_UP));
+        /*btnSignIn.setText(lang.getText(SIGN_IN));
+        btnSignUp.setText(lang.getText(SIGN_UP));*/
     }
 
 }

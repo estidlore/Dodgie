@@ -4,6 +4,10 @@
     android:height="64dp"
     android:viewportWidth="64"
     android:viewportHeight="64">
+    <path android:pathData="M0,0l64,64"
+        android:strokeColor="#880000"
+        android:strokeWidth="1"
+        android:fillColor="#EE0000"/>
     <path
         android:pathData="M24,18l7,7h-3v21h-8v-21h-3z
             M40,46l-7,-7h3v-21h8v21h3z"

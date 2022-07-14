@@ -19,7 +19,7 @@ import com.blieve.dodgie.model.User;
 import com.blieve.dodgie.util.Droid;
 import com.blieve.dodgie.util.ImgAdapter;
 
-public class A_Style extends Droid.BaseActivity {
+public class A_Style extends BaseActivity {
 
     private final static int[][] styles = {
             // FACES
@@ -204,7 +204,6 @@ public class A_Style extends Droid.BaseActivity {
     private ImageView imgBack;
     private LinearLayout lytPanel;
 
-    private Droid.Media media;
     private int style, section;
 
     @Override
@@ -236,8 +235,6 @@ public class A_Style extends Droid.BaseActivity {
         for(ImageView i : imgsPreview) {
             Droid.UI.setPadding(i, Droid.UI.height(2));
         }
-        media = Droid.Media.get();
-
         iniStyles();
         style = -1;
         setStyle(0);
@@ -276,6 +273,7 @@ public class A_Style extends Droid.BaseActivity {
             gridsStyle[i].setAdapter(imgAdaptsStyle[i]);
             int finalI = i;
             gridsStyle[i].setOnItemClickListener((parent, view, position, id) -> {
+                media.play(Droid.Media.CLICK);
                 if(position != imgAdaptsStyle[finalI].getSelection()) {
                     int styleIndex = style * 3 + section;
                     user.setStyle(styleIndex, position);
@@ -348,11 +346,12 @@ public class A_Style extends Droid.BaseActivity {
 
     private void clickListen() {
         View.OnClickListener clickListener = v -> {
-            media.playSound(Droid.Media.CLICK);
             if (v == imgBack) {
+                media.play(Droid.Media.CLOSE);
                 finish();
                 return;
             }
+            media.play(Droid.Media.CLICK);
             for(int i = imgsPreview.length - 1; i >= 0; i--) {
                 if(v == imgsPreview[i]) {
                     setStyle(i);

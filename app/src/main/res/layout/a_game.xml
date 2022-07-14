@@ -23,11 +23,11 @@
         android:id="@+id/game_img_up"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="1"
-        app:layout_constraintWidth_percent="0.13"
-        app:srcCompat="@drawable/_game_up"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.13"
+        app:srcCompat="@drawable/_game_up" />
 
     <ImageView
         android:id="@+id/game_img_left"
@@ -98,7 +98,8 @@
 
             <TextView
                 android:id="@+id/game_txt_score"
-                style="@style/txt.wrap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="0"
                 app:layout_constraintEnd_toStartOf="@+id/game_img_lvl"
                 app:layout_constraintStart_toEndOf="@+id/game_img_score"
@@ -115,7 +116,8 @@
 
             <TextView
                 android:id="@+id/game_txt_lvl"
-                style="@style/txt.wrap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="0"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/game_img_lvl"
@@ -132,7 +134,8 @@
 
             <TextView
                 android:id="@+id/game_txt_coins"
-                style="@style/txt.wrap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="0"
                 app:layout_constraintTop_toTopOf="@id/game_img_coins"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -149,7 +152,8 @@
 
             <TextView
                 android:id="@+id/game_txt_diamonds"
-                style="@style/txt.wrap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="0"
                 app:layout_constraintTop_toTopOf="@id/game_img_diamond"
                 app:layout_constraintBottom_toBottomOf="parent"

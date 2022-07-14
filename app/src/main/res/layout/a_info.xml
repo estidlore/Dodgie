@@ -17,9 +17,6 @@
 
     <TextView
         android:id="@+id/info_version"
-        android:textSize="@dimen/h6_size"
-        android:textColor="#FFFFFF"
-        android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10sp"

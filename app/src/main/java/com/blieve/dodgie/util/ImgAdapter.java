@@ -48,15 +48,15 @@ public class ImgAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final ImageView img;
+        ImageView img;
         if (convertView == null) {
             img = new ImageView(ctx);
+            img.setLayoutParams(imgParams);
+            Droid.UI.setPadding(img, imgPadding);
         } else {
             img = (ImageView) convertView;
         }
         img.setImageBitmap(bmps[position]);
-        img.setLayoutParams(imgParams);
-        Droid.UI.setPadding(img, imgPadding);
         img.setBackground(ResourcesCompat.getDrawable(ctx.getResources(),
                 position == selection ? R.drawable.ui_gridview_selector : R.drawable.ui_empty,
                 null));
@@ -71,5 +71,7 @@ public class ImgAdapter extends BaseAdapter {
     public final int getSelection() {
         return selection;
     }
+
+
 
 }

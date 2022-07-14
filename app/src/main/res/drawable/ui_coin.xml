@@ -2,11 +2,8 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="32dp"
     android:height="32dp"
-    android:viewportWidth="33.0"
-    android:viewportHeight="33.0">
-    <group
-        android:translateX="0.5"
-        android:translateY="0.5">
+    android:viewportWidth="32.0"
+    android:viewportHeight="32.0">
         <path
             android:pathData="M0,16 a16,16 0,0 0,32 0a16,16 0,0 0,-32 0z"
             android:strokeWidth="0.5"
@@ -21,5 +18,4 @@
         <path
             android:pathData="M6,16 a10,10 0,0 0,20 0a10,10 0,0 0,-20 0z"
             android:fillColor="#D89C34"/>
-    </group>
 </vector>

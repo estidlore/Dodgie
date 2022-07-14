@@ -22,7 +22,8 @@
 
         <TextView
             android:id="@+id/mode_txt_score"
-            style="@style/txt.wrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="0"
             app:layout_constraintEnd_toStartOf="@+id/mode_img_lvl"
             app:layout_constraintStart_toEndOf="@+id/mode_img_score"
@@ -39,7 +40,8 @@
 
         <TextView
             android:id="@+id/mode_txt_lvl"
-            style="@style/txt.wrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/mode_img_lvl"
@@ -70,14 +72,18 @@
 
         <TextView
             android:id="@+id/mode_txt_init_lvl"
-            style="@style/txt.constraint.wrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/constraint"
             android:text="Initial level"
             android:textAlignment="center"
             app:layout_constraintVertical_bias="0.25"/>
 
         <TextView
             android:id="@+id/mode_txt_init_lvl_value"
-            style="@style/txt.constraint.wrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/constraint"
             android:text="1"
             android:textAlignment="center"
             app:layout_constraintVertical_bias="0.4"/>
@@ -94,7 +100,8 @@
 
         <TextView
             android:id="@+id/mode_txt_coins"
-            style="@style/txt.wrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="0"
             app:layout_constraintTop_toTopOf="@id/mode_img_coins"
             app:layout_constraintBottom_toBottomOf="@id/mode_img_coins"
@@ -112,7 +119,8 @@
 
         <TextView
             android:id="@+id/mode_txt_diamonds"
-            style="@style/txt.wrap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="0"
             app:layout_constraintTop_toTopOf="@id/mode_img_diamond"
             app:layout_constraintBottom_toBottomOf="@id/mode_img_diamond"
@@ -127,10 +135,10 @@
             app:layout_constraintVertical_bias="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <ListView
         android:id="@+id/mode_list"
         style="@style/rel"
-        android:choiceMode="singleChoice"
         app:layout_constraintWidth_percent="0.4"
         app:layout_constraintHeight_percent="0.8"
         app:layout_constraintHorizontal_bias="0.9">
